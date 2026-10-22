@@ -1,0 +1,8 @@
+# Bundle patch: mount the Resend MCP toolset.
+#
+# The credential reference defaults to RESEND_API_KEY. Store the key in the
+# DSH credential store (Settings > Credentials) before enabling the plugin.
+- insert:
+    - id: dsh-resend-mcp
+      name: dsh-resend-mcp
+      config: {}

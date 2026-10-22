@@ -1,0 +1,70 @@
+{
+  "name": "dsh-resend-mcp",
+  "version": "0.1.0",
+  "description": "Resend MCP toolset for DeepSeek Harness: credential-aware, filtered access to Resend's hosted MCP server.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "lib/",
+    "locale/",
+    "docs/",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "icon": "./icon.svg",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "resend",
+    "email",
+    "mcp"
+  ],
+  "homepage": "https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp#readme",
+  "bugs": {
+    "url": "https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git"
+  },
+  "license": "Apache-2.0",
+  "author": "dsh <dsh@pvlb.dev>",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check lib/index.js && node --check lib/selection.js && node --check lib/prompt.js && node --check lib/bridge.js && node --test test/*.test.mjs",
+    "dev:link": "node scripts/dev-link-dsh.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "pack:check": "npm pack --dry-run"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "compatibility": {
+      "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-credentials": ">=0.2.0-rc.1 <0.3.0-0",
+    "@deepseek-ai/dsh-mcp-client": ">=0.2.0-rc.1 <0.3.0-0",
+    "@deepseek-ai/dsh-system-prompt": ">=0.2.0-rc.1 <0.3.0-0",
+    "@deepseek-ai/dsh-tools": ">=0.2.0-rc.1 <0.3.0-0",
+    "@deepseek-ai/schemastery": "^3.18.1"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/client": "2.0.0"
+  },
+  "engines": {
+    "node": ">=22.6"
+  }
+}
