@@ -90,7 +90,13 @@ Status legend: `open` · `in progress` · `done` · `blocked`
   npmjs-installed 0.1.2; the Plugin Manager reports `restart-required`.
 - Repo public: anonymous `GET` of the Forgejo repo, API, and npm package
   metadata all return 200; GitHub mirror at
-  https://github.com/pvlb-dev/dsh-resend-mcp.
+  https://github.com/pvlb-dev/dsh-resend-mcp, synced to `ad626dc` (0.1.2).
+- 0.1.2 outage recovery (2026-10-23): the original runner host froze during
+  the npmjs job (Forgejo publish succeeded). After a second runner came up, run
+  37 (npmjs) was re-run and published `0.1.2`; CI run 36 was re-run green; the
+  Forgejo release `v0.1.2` was created.
+- Secret scan across all commits: no `re_...` patterns.
+- Live `web` profile: npmjs-installed `0.1.2`, `restart-required`.
 
 ## Notes
 
