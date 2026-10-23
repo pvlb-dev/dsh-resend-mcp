@@ -3,6 +3,9 @@
 Resend email tools for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness),
 wrapped as an installable DSH bundle.
 
+**Home:** <https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp> ·
+**Mirror:** <https://github.com/pvlb-dev/dsh-resend-mcp>
+
 The plugin connects to Resend's hosted MCP server
 (`https://mcp.resend.com/mcp`), resolves your API key from the DSH credential
 store, and exposes a **curated subset** of Resend's tools as native agent tools
@@ -12,12 +15,12 @@ connection, credential reference, and active filter without revealing the key.
 > Not affiliated with Resend. Resend and the Resend logo are trademarks of
 > their respective owners.
 
-**Status:** v0.1.1 (same code as 0.1.0; documentation only), verified on
+**Status:** v0.1.2 (same code as 0.1.0; documentation only), verified on
 2026-10-22 against DSH `0.2.0-rc.2` and Resend's live MCP server: 9 tools
 registered from 137 available, and a test email was delivered from
 `dsh@pvlb.dev` to `pvlb.dev@gmail.com`. CI runs on Forgejo Actions;
 `dsh-resend-mcp` is published on
-[npmjs](https://www.npmjs.com/package/dsh-resend-mcp) and in the private Forgejo
+[npmjs](https://www.npmjs.com/package/dsh-resend-mcp) and in the Forgejo
 registry.
 
 ## Why a subset?
@@ -59,7 +62,7 @@ the plugin's DSH peers from the running installation; its own runtime dependency
 ### From a checkout (development)
 
 ```bash
-git clone ssh://git@git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git
+git clone https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git
 cd dsh-resend-mcp
 npm run dev:link          # makes a local ("link:") install importable
 dsh plugin --profile web add "$PWD"
@@ -72,17 +75,17 @@ registry install gets its dependencies normally.
 ### From a packed tarball
 
 ```bash
-git clone ssh://git@git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git
+git clone https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git
 cd dsh-resend-mcp
 npm pack
-dsh plugin --profile web add ./dsh-resend-mcp-0.1.1.tgz
+dsh plugin --profile web add ./dsh-resend-mcp-0.1.2.tgz
 ```
 
-### From the private Forgejo registry
+### From the Forgejo registry
 
-The Forgejo registry hosts the same version, but downloads need a token and the
-tarball is installed explicitly; see
-[docs/publishing.md](docs/publishing.md). It is not a public install path.
+The Forgejo registry hosts the same version and is publicly readable, but npm
+still needs the `dsh-plugins` registry configured for that install; see
+[docs/publishing.md](docs/publishing.md). npm remains the one-command path.
 
 After install, restart or reload the profile if the Plugin Manager reports
 `restart-required`.
@@ -91,12 +94,27 @@ After install, restart or reload the profile if the Plugin Manager reports
 
 1. Create a key at <https://resend.com/api-keys> with permission to send email
    and read the resources you want the agent to use.
-2. In the DSH Web UI open **Settings → Credentials** and store it as
-   `RESEND_API_KEY`.
+2. Add it to the local credential store, `~/.dsh/.credentials.yaml` (or
+   `$DSH_HOME/.credentials.yaml`), under the existing `refs:` map:
 
-The key is resolved through `ctx.credentials` at connect time. It is never
-written to configuration, logs, tool output, or the repository. An environment
-variable supplied to the DSH process also works and is read-only in the UI.
+   ```yaml
+   refs:
+     RESEND_API_KEY: re_your_api_key
+   ```
+
+   Add the entry; do not replace `version`, `records`, or other refs. The store
+   watches the file and reloads it on change, so no restart is needed.
+3. Keep the file owner-only. DSH refuses to load a credentials file that group
+   or others can read; fix it with
+   `chmod 600 ~/.dsh/.credentials.yaml` if necessary.
+
+The key is resolved through `ctx.credentials` at connect time and never written
+to configuration, logs, tool output, or the repository.
+
+This deployment's Web UI does not expose a generic credential editor, so
+editing the file (or exporting `RESEND_API_KEY` before launching DSH) is the
+supported path. The launching environment wins over the file: an exported
+variable shadows the stored entry and is reported read-only until you clear it.
 
 To use a different credential reference, set `apiKeyEnv` in the plugin config.
 

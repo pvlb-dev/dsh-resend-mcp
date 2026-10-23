@@ -1,9 +1,12 @@
 name: CI
 
+# No pull_request trigger on purpose. This repository is public, and the
+# single Forgejo runner gives job containers the host's rootless Docker socket;
+# a fork PR workflow could reach the Forgejo environment. Only maintainers can
+# push or dispatch, so those events are safe.
 on:
   push:
     branches: [master]
-  pull_request:
   workflow_dispatch:
 
 jobs:

@@ -27,15 +27,14 @@ There is no build step here: `npm pack` copies the files listed in `files` in
 
 | Registry | Who can install | Auth | Use |
 |---|---|---|---|
-| Forgejo | accounts on `git.pvlb.dev` that can read the repo | Forgejo token with `write:package` | internal releases, CI rehearsal |
-| npmjs | anyone on the internet | npm account token | public installs, Resend outreach |
+| Forgejo | anyone (the repo is public) | token with `write:package` to publish; none to read | internal releases, CI rehearsal |
+| npmjs | anyone on the internet | npm account token to publish; none to read | public installs, Resend outreach |
 
 **Forgejo does host an npm registry** (Forgejo 17 supports npm, including
-unscoped names). The catch: this repository is private, so a package in
-`dsh-plugins` is private too. Forgejo publishing is therefore useful for
-internal testing and as a release rehearsal, but it does **not** give Resend a
-link they can open. A public artifact still means npmjs (or making the
-repository public elsewhere).
+unscoped names). The repository is public now, so packages under `dsh-plugins`
+are anonymously readable. npmjs is still the better one-command install path:
+npm has to be pointed at the Forgejo registry for this unscoped name, while the
+public registry is the default.
 
 The npm name `dsh-resend-mcp` was still unclaimed on npmjs when this was
 written (2026-10-23). Check again before publishing:
@@ -82,21 +81,19 @@ manual **Run workflow** is a dry run and uploads nothing.
 
 Because the package is unscoped and the profile's npm defaults to npmjs, do not
 point the global registry at Forgejo — that would break every other install.
-Download the tarball and install that instead:
+Download the tarball and install that instead (the package is public, so no
+token is needed to read it):
 
 ```bash
-npm config set //git.pvlb.dev/api/packages/dsh-plugins/npm/:_authToken "<token>"
-npm pack dsh-resend-mcp@0.1.0 --registry https://git.pvlb.dev/api/packages/dsh-plugins/npm/
-dsh plugin --profile web add ./dsh-resend-mcp-0.1.0.tgz
+npm pack dsh-resend-mcp@0.1.2 --registry https://git.pvlb.dev/api/packages/dsh-plugins/npm/
+dsh plugin --profile web add ./dsh-resend-mcp-0.1.2.tgz
 ```
 
-`npm pack` writes the token to `~/.npmrc`; remove that line when you are done
-with `npm config delete //git.pvlb.dev/api/packages/dsh-plugins/npm/:_authToken`.
+## Option B — npmjs (public install)
 
-## Option B — npmjs (needed for outreach)
-
-This still needs a human because it is an account signup, not a technical
-blocker.
+This is already done for this project. These are the steps a new publisher
+would repeat: they need a human because account signup and 2FA are not
+automatable.
 
 1. Create an account on <https://www.npmjs.com/signup>, enable 2FA (npm requires
    it for publishing), and verify the email.
@@ -163,12 +160,15 @@ up yet; the artifact is identical.
 
 - CI is green on Forgejo Actions (`check`: `npm run check` + `npm pack
   --dry-run`, Node 22.6, `docker` label).
-- Forgejo publishing works: `0.1.0` and `0.1.1` were published on 2026-10-23
-  from tags `v0.1.0` / `v0.1.1` using the `NPM_TOKEN` secret. Forgejo releases
-  exist for both tags.
-- npmjs publishing works: `0.1.0` and `0.1.1` are public via
+- Forgejo publishing works: `0.1.0`, `0.1.1`, and `0.1.2` were published on
+  2026-10-23 from tags `v0.1.0` / `v0.1.1` / `v0.1.2` using the `NPM_TOKEN`
+  secret. Forgejo releases exist for the tagged versions.
+- npmjs publishing works: the same versions are public via
   `.forgejo/workflows/publish-npmjs.yml` and the `NPMJS_TOKEN` secret.
-  `npm view dsh-resend-mcp version` returns `0.1.1` (0.1.1 is docs-only).
-- A public **source** mirror is still open (issue #7): the `repository` and
-  `homepage` fields in `package.json` point at the private Forgejo repo, so the
-  npm page links to a 404 for anonymous visitors.
+  `npm view dsh-resend-mcp version` returns `0.1.2` (0.1.1 and 0.1.2 are
+  docs/metadata only).
+- The source is public in two places:
+  <https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp> (home) and
+  <https://github.com/pvlb-dev/dsh-resend-mcp> (mirror). The `repository` and
+  `homepage` fields in `package.json` point at the public Forgejo URL, so the
+  npm page links resolve.

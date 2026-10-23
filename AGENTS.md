@@ -98,7 +98,7 @@ hard part (MCP result projection) from the shipped client.
 | `scripts/smoke.mjs` | Standalone real-server check using `RESEND_API_KEY`; no DSH required |
 | `cordis.patch.yml` | Bundle row insertion |
 | `locale/en.json`, `icon.svg` | Plugin Manager display metadata |
-| `.forgejo/workflows/ci.yml` | Tests and `npm pack --dry-run` on pushes/PRs |
+| `.forgejo/workflows/ci.yml` | Tests and `npm pack --dry-run` on master pushes |
 | `.forgejo/workflows/publish.yml` | Tag-driven publish to the Forgejo npm registry |
 | `.forgejo/workflows/publish-npmjs.yml` | Tag-driven publish to npmjs; no-op without `NPMJS_TOKEN` |
 | `AGENTS.md`, `TASKS.md`, `README.md`, `docs/outreach.md` | Working notes, backlog, user docs, outreach |
@@ -159,8 +159,11 @@ This Forgejo instance has a single-slot `forgejo-runner`; both `docker` and
 `docs/publishing.md` for the full release flow and the token setup.
 
 - `.forgejo/workflows/ci.yml` runs `npm run check` and `npm pack --dry-run` on
-  pushes to `master` and on pull requests. It needs no secrets and no install
-  step; tests are offline.
+  pushes to `master` and on manual dispatch. It deliberately has **no
+  `pull_request` trigger**: the repository is public, and a fork PR would run
+  arbitrary code on the single runner, whose job containers mount the host's
+  rootless Docker socket. Test a contributor's branch with `workflow_dispatch`
+  only after reviewing it, or locally.
 - `.forgejo/workflows/publish.yml` publishes only on `v*` tags, after checking
   that the tag equals `v` + `package.json` version. It reads the Forgejo token
   from the repository secret `NPM_TOKEN` (`write:package` scope); a manual run
@@ -168,8 +171,9 @@ This Forgejo instance has a single-slot `forgejo-runner`; both `docker` and
 - `.forgejo/workflows/publish-npmjs.yml` publishes the same tag to
   `https://registry.npmjs.org` with `NPMJS_TOKEN`, and skips cleanly while that
   secret is absent. The public package is `dsh-resend-mcp`.
-- Do not add `pull_request_target`-style workflows or accept outside PRs: job
-  containers get the host's rootless Docker socket (see the runner wiki).
+- Do not add a `pull_request`/`pull_request_target` trigger or accept outside
+  PRs while this instance runs a Docker-socket runner: job containers can reach
+  the host and the Forgejo environment (see the runner wiki).
 
 ### Install while developing
 
@@ -190,12 +194,15 @@ dsh plugin --profile web add /absolute/path/to/dsh-resend-mcp
 
 # from a packed tarball
 npm pack
-dsh plugin --profile web add ./dsh-resend-mcp-0.1.1.tgz
+dsh plugin --profile web add ./dsh-resend-mcp-0.1.2.tgz
 ```
 
-After install, provide the key in the DSH Web UI: **Settings → Credentials →
-`RESEND_API_KEY`**. An environment variable supplied to the launching process
-also wins (and is read-only in the UI).
+After install, add `RESEND_API_KEY` to the local credential store,
+`~/.dsh/.credentials.yaml` (or `$DSH_HOME/.credentials.yaml`), under `refs:`;
+the store watches the file and reloads it, so no restart is needed. Keep the
+file owner-only (`chmod 600`). An environment variable supplied to the
+launching process wins over the file and is read-only in the UI. The Web UI has
+no generic credential editor in this deployment.
 
 ## Verification
 
@@ -237,13 +244,15 @@ Checked 2026-10-22, updated 2026-10-23:
   must never print it.
 - `pvlb.dev` is a verified Resend domain with sending enabled.
 - The plugin is installed in the `web` profile from npmjs
-  (`dsh-resend-mcp@0.1.1`) and selected in `dsh.profile.bundles`. The Host must
+  (`dsh-resend-mcp@0.1.2`) and selected in `dsh.profile.bundles`. The Host must
   restart to load it; until then the running process still holds the previous
   `link:` code and `resend_status` reports 9/137 tools.
 - End-to-end verification on 2026-10-22: `dsh@pvlb.dev` → `pvlb.dev@gmail.com`,
   Resend ID `01a16501-b85e-78b2-8b9c-d905153074b4`, status `delivered`.
 - `origin` is `ssh://git@git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git`, default
-  branch `master`.
+  branch `master`. The repository is public; the web UI is
+  <https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp> and `master` is pushed/mirrored
+  to <https://github.com/pvlb-dev/dsh-resend-mcp>.
 - Commit identity: `dsh <dsh@pvlb.dev>` (configured in the repo).
 - The profile directory is write-protected to the agent's shell; use
   `plugin_manager`, not shell writes, for profile changes.
@@ -253,16 +262,15 @@ Checked 2026-10-22, updated 2026-10-23:
   `.forgejo/workflows/`.
 - Publishing to the Forgejo npm registry uses the repository secret
   `NPM_TOKEN` (a user token with `write:package`). Forgejo 17 does not provide a
-  `gitea` context, so there is no automatic Actions token. `dsh-resend-mcp@0.1.0`
-  was published on 2026-10-23 from tag `v0.1.0`, with release
-  `v0.1.0 — initial release`; `v0.1.1` is a docs-only follow-up release.
-  See `docs/publishing.md`.
-- `0.1.1` is the latest public release on npmjs (`npm view dsh-resend-mcp
-  version` → `0.1.1`; `0.1.0` was the first). It is docs-only: the README now
-  leads with the npm install command. The live `web` profile was switched from
-  the `link:` checkout to the npmjs install (now `0.1.1`) on 2026-10-23, so the
-  Plugin Manager reports `restart-required`; the running process still holds the
-  previously loaded link code until restart.
+  `gitea` context, so there is no automatic Actions token. `0.1.0`, `0.1.1`, and
+  `0.1.2` were published on 2026-10-23 from tags `v0.1.0` / `v0.1.1` / `v0.1.2`;
+  the later two are docs/metadata only. See `docs/publishing.md`.
+- `0.1.2` is the latest public release on npmjs (`npm view dsh-resend-mcp
+  version` → `0.1.2`). It makes the package metadata point at the public
+  Forgejo repo (HTTPS) and corrects the credential instructions. The live `web`
+  profile was switched from the `link:` checkout to the npmjs install (now
+  `0.1.2`) on 2026-10-23, so the Plugin Manager reports `restart-required`; the
+  running process still holds the previously loaded link code until restart.
 
 ## Conventions
 
@@ -289,10 +297,10 @@ Checked 2026-10-22, updated 2026-10-23:
 
 ## Roadmap and known limits
 
-- `dsh-resend-mcp@0.1.1` is public on npmjs and in the private Forgejo
-  registry. A public source mirror is still open (issue #7), so the
-  `repository`/`homepage` links on the npm page point at the private Forgejo
-  repo. Installs from Forgejo need a token and use a downloaded tarball; the
+- `dsh-resend-mcp@0.1.2` is public on npmjs and in the Forgejo registry. The
+  source is public at both the Forgejo home and the GitHub mirror, and the
+  `repository`/`homepage` fields point at the public Forgejo URL. Forgejo
+  installs still need the registry configured and use a downloaded tarball; the
   public install is `dsh plugin --profile web add dsh-resend-mcp`.
 - No settings UI; sender/preset are YAML fields.
 - No inbox preset enabled by default; it is available as `preset: inbox`.
