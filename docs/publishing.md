@@ -144,6 +144,20 @@ up yet; the artifact is identical.
   must not run there (see the runner wiki).
 - Rotate the token if it ever appears in a log or a chat transcript.
 
+## Troubleshooting
+
+- **`Unknown Variable Access gitea` / "the workflow file is not usable"**: this
+  Forgejo instance does not expose a `gitea` context, so there is no automatic
+  package token. Use the `NPM_TOKEN` secret; it is the supported path (and the
+  one the runner wiki describes).
+- **`401 Unauthorized`**: the secret is missing, expired, or the token lacks the
+  `write:package` scope.
+- **`403 Forbidden`**: the token's user cannot write packages under
+  `dsh-plugins`.
+- **`npm publish` says the version already exists**: Forgejo rejects duplicate
+  name+version pairs. Bump `package.json`, or delete the version in the package
+  UI before republishing.
+
 ## Current status
 
 - The CI and publish workflows exist.
