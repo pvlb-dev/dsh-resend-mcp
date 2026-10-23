@@ -26,8 +26,8 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 
 | ID | Task | Status | Issue |
 |---|---|---|---|
-| F1 | Add a Forgejo Actions workflow for `npm test` and `npm pack` (confirm runner labels first) | open | [#1](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/1) |
-| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | blocked (no npm auth / public infra) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
+| F1 | Add a Forgejo Actions workflow for `npm test` and `npm pack` (confirm runner labels first) | in progress | [#1](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/1) |
+| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | in progress (Forgejo registry wired; npmjs account still needed) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
 | F3 | Add a settings surface for `defaultSender`, `preset`, and filters | open | [#3](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/3) |
 | F4 | Document the inbox preset workflow end to end | open | [#4](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/4) |
 | F5 | Send the Resend outreach email and propose a DeepSeek Harness docs tab | blocked (needs public artifact) | [#6](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/6) |

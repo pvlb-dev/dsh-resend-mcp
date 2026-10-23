@@ -1,0 +1,52 @@
+name: Publish package
+
+# Real publishes only happen for tags (v*). A manual run is a dry run, so a
+# maintainer can validate packaging without uploading anything.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: docker
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.6"
+
+      - name: Syntax checks and unit tests
+        run: npm run check
+
+      - name: Verify release tag matches package version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$version" ]; then
+            echo "::error::Tag $tag does not match package version $version. Bump package.json or retag."
+            exit 1
+          fi
+
+      - name: Dry run (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: npm publish --dry-run
+
+      - name: Publish to Forgejo npm registry
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::NPM_TOKEN is empty. Add a Forgejo token with write:package as a repository Actions secret (see docs/publishing.md)."
+            exit 1
+          fi
+          registry="https://git.pvlb.dev/api/packages/dsh-plugins/npm/"
+          npm config set registry "$registry"
+          npm config set "//git.pvlb.dev/api/packages/dsh-plugins/npm/:_authToken" "$NODE_AUTH_TOKEN"
+          npm publish

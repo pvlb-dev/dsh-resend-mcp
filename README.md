@@ -63,11 +63,17 @@ npm pack
 dsh plugin --profile web add ./dsh-resend-mcp-0.1.0.tgz
 ```
 
-### From the registry (once published)
+### From a registry
+
+Once the package is on npmjs:
 
 ```bash
 dsh plugin --profile web add dsh-resend-mcp
 ```
+
+The private Forgejo npm registry also works today, but downloads need a token
+and the tarball is installed explicitly; see
+[docs/publishing.md](docs/publishing.md). It is not a public install path.
 
 After install, restart or reload the profile if the Plugin Manager reports
 `restart-required`.
@@ -202,7 +208,9 @@ selected names (not schemas), and can optionally send a test email with
 `--send-to <address>`.
 
 See [AGENTS.md](AGENTS.md) for architecture, deployment facts, and the full
-verification checklist, and [TASKS.md](TASKS.md) for the backlog.
+verification checklist, [TASKS.md](TASKS.md) for the backlog, and
+[docs/publishing.md](docs/publishing.md) for CI, tagging, and registry setup
+(including the Forgejo npm registry).
 
 ## Limitations
 

@@ -98,7 +98,10 @@ hard part (MCP result projection) from the shipped client.
 | `scripts/smoke.mjs` | Standalone real-server check using `RESEND_API_KEY`; no DSH required |
 | `cordis.patch.yml` | Bundle row insertion |
 | `locale/en.json`, `icon.svg` | Plugin Manager display metadata |
+| `.forgejo/workflows/ci.yml` | Tests and `npm pack --dry-run` on pushes/PRs |
+| `.forgejo/workflows/publish.yml` | Tag-driven publish to the Forgejo npm registry |
 | `AGENTS.md`, `TASKS.md`, `README.md`, `docs/outreach.md` | Working notes, backlog, user docs, outreach |
+| `docs/publishing.md` | Release/publish guide written for non-npm people |
 
 ## Configuration
 
@@ -147,6 +150,23 @@ npm run dev:link
 `node_modules/`. `pnpm link:` does not resolve a linked package's own
 dependencies, so without this step the Loader fails with a bare-import error.
 The script only touches the gitignored `node_modules/`.
+
+### CI and releases
+
+This Forgejo instance has a single-slot `forgejo-runner`; both `docker` and
+`ubuntu-latest` labels map to the same `act-22.04` image. See
+`docs/publishing.md` for the full release flow and the token setup.
+
+- `.forgejo/workflows/ci.yml` runs `npm run check` and `npm pack --dry-run` on
+  pushes to `master` and on pull requests. It needs no secrets and no install
+  step; tests are offline.
+- `.forgejo/workflows/publish.yml` publishes only on `v*` tags, after checking
+  that the tag equals `v` + `package.json` version. It reads the Forgejo token
+  from the repository secret `NPM_TOKEN` (`write:package` scope); a manual run
+  is a dry run. Publishing to npmjs is still a manual/account task and is
+  tracked in issue #2.
+- Do not add `pull_request_target`-style workflows or accept outside PRs: job
+  containers get the host's rootless Docker socket (see the runner wiki).
 
 ### Install while developing
 
@@ -222,6 +242,13 @@ Checked 2026-10-22:
 - Commit identity: `dsh <dsh@pvlb.dev>` (configured in the repo).
 - The profile directory is write-protected to the agent's shell; use
   `plugin_manager`, not shell writes, for profile changes.
+- Forgejo is 17.0.0. The instance-level `forgejo-runner` exposes the labels
+  `docker` and `ubuntu-latest`, runs **one job at a time**, and gives job
+  containers `node`, `git`, and Docker access. CI and publish workflows live in
+  `.forgejo/workflows/`.
+- Publishing to the Forgejo npm registry needs the repository secret
+  `NPM_TOKEN` (a user token with `write:package`). The first publish is still
+  pending; see `docs/publishing.md` and issue #2.
 
 ## Conventions
 
@@ -248,11 +275,11 @@ Checked 2026-10-22:
 
 ## Roadmap and known limits
 
-- npm publish and a public mirror are not done yet; installs use a path or
-  tarball.
+- Publishing to the Forgejo npm registry is wired but not yet exercised; npmjs
+  and a public mirror are still open (issue #2). Installs currently use a path
+  or tarball, or a tarball downloaded from the private registry.
 - No settings UI; sender/preset are YAML fields.
 - No inbox preset enabled by default; it is available as `preset: inbox`.
-- No Forgejo Actions workflow yet; runner labels need checking first.
 - Local validation enforces only DSH's JSON Schema subset. Resend keywords such
   as `format`, `pattern`, `minItems`, and `maxItems` reach the model but are
   enforced by the MCP server, not locally.
