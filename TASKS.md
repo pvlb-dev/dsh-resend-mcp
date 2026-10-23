@@ -27,10 +27,19 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | ID | Task | Status | Issue |
 |---|---|---|---|
 | F1 | Add a Forgejo Actions workflow for `npm test` and `npm pack` (confirm runner labels first) | done | [#1](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/1) |
-| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | in progress (0.1.0 on Forgejo; npmjs/public pending) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
+| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | in progress (0.1.0 on Forgejo; npmjs workflow ready, token pending) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
 | F3 | Add a settings surface for `defaultSender`, `preset`, and filters | open | [#3](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/3) |
 | F4 | Document the inbox preset workflow end to end | open | [#4](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/4) |
 | F5 | Send the Resend outreach email and propose a DeepSeek Harness docs tab | blocked (needs public artifact) | [#6](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/6) |
+
+## Next session
+
+1. Create the npmjs account/token and add the `NPMJS_TOKEN` repository secret;
+   do not paste the token into chat (steps in `docs/publishing.md`).
+2. Move tag `v0.1.0` to the latest `master` and push it. The Forgejo publish
+   step sees the existing 0.1.0 and skips; the npmjs workflow publishes.
+3. Verify `npm view dsh-resend-mcp@0.1.0`, then install from npmjs on a clean
+   profile (issue #5), update README/outreach, and close #2/#6.
 
 ## Done
 
