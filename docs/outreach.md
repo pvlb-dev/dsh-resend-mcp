@@ -1,7 +1,8 @@
 # Outreach kit — getting DeepSeek Harness on Resend's MCP page
 
-Status: **draft only. Do not send until a public repository or npm package
-exists.** Resend's integration list needs a link external users can follow.
+Status: **draft.** `dsh-resend-mcp@0.1.0` is public on npmjs, so the package
+link is usable. A public source mirror is still pending (issue #7); do not link
+the private Forgejo repository until it exists.
 
 ## What we built
 
@@ -31,7 +32,8 @@ dsh plugin --profile web add dsh-resend-mcp
 
 Store your Resend API key in **Settings → Credentials** as `RESEND_API_KEY`.
 The plugin exposes Resend's MCP tools as `mcp__resend__*` and includes a
-`resend_status` check. Source and install notes: <PUBLIC_URL>.
+`resend_status` check. Package and install notes:
+<https://www.npmjs.com/package/dsh-resend-mcp>.
 ```
 
 ## Email draft
@@ -58,18 +60,20 @@ page? I'm happy to provide the exact snippet, test the setup against your docs,
 or open a PR to `resend/resend-skills` if that repo is the right place for
 client-specific install notes.
 
-Repo: <PUBLIC_URL>
-npm: <NPM_URL> (once published)
+Package: https://www.npmjs.com/package/dsh-resend-mcp
 
 Thanks!
 <NAME>
 
 ## Checklist before sending
 
-- [ ] Public repository or npm package is reachable without credentials.
+- [x] npm package is reachable without credentials:
+      <https://www.npmjs.com/package/dsh-resend-mcp>
+- [ ] Public source mirror is reachable (the Forgejo repo is private; issue #7).
+      Do not link the private repo in the email.
 - [ ] README has a screenshot or a short transcript of a successful send.
-- [ ] `npm run check` is green and the release is tagged.
-- [ ] The install command in the email matches the public artifact.
+- [x] `npm run check` is green, `v0.1.0` is tagged, and the package is on npmjs.
+- [x] The install command in the email matches the public artifact.
 - [ ] No API keys, account IDs, or private domains appear in the message.
 - [ ] Send from a personal address, not the Resend account's transactional
       sender.

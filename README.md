@@ -15,8 +15,9 @@ connection, credential reference, and active filter without revealing the key.
 **Status:** v0.1.0, verified on 2026-10-22 against DSH `0.2.0-rc.2` and Resend's
 live MCP server: 9 tools registered from 137 available, and a test email was
 delivered from `dsh@pvlb.dev` to `pvlb.dev@gmail.com`. CI runs on Forgejo
-Actions, and `dsh-resend-mcp@0.1.0` is published to the private Forgejo npm
-registry (public npm is still pending, issue #2).
+Actions; `dsh-resend-mcp@0.1.0` is published on
+[npmjs](https://www.npmjs.com/package/dsh-resend-mcp) and in the private Forgejo
+registry.
 
 ## Why a subset?
 
@@ -43,7 +44,18 @@ it explicitly:
 
 ## Install
 
-### From a checkout (recommended for now)
+### From npm (recommended)
+
+```bash
+dsh plugin --profile web add dsh-resend-mcp
+```
+
+The package is public:
+<https://www.npmjs.com/package/dsh-resend-mcp>. The DSH Plugin Manager resolves
+the plugin's DSH peers from the running installation; its own runtime dependency
+(`@modelcontextprotocol/client`) comes from npm.
+
+### From a checkout (development)
 
 ```bash
 git clone ssh://git@git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git
@@ -54,7 +66,7 @@ dsh plugin --profile web add "$PWD"
 
 `npm run dev:link` symlinks the DSH packages this plugin imports into the
 gitignored `node_modules/`. It is only needed for `link:` installs; a tarball or
-registry install resolves its own dependencies.
+registry install gets its dependencies normally.
 
 ### From a packed tarball
 
@@ -65,16 +77,10 @@ npm pack
 dsh plugin --profile web add ./dsh-resend-mcp-0.1.0.tgz
 ```
 
-### From a registry
+### From the private Forgejo registry
 
-Once the package is on npmjs:
-
-```bash
-dsh plugin --profile web add dsh-resend-mcp
-```
-
-The private Forgejo npm registry already hosts `dsh-resend-mcp@0.1.0`, but
-downloads need a token and the tarball is installed explicitly; see
+The Forgejo registry hosts the same version, but downloads need a token and the
+tarball is installed explicitly; see
 [docs/publishing.md](docs/publishing.md). It is not a public install path.
 
 After install, restart or reload the profile if the Plugin Manager reports

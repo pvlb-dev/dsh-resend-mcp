@@ -115,8 +115,8 @@ public install is the one-liner:
 dsh plugin --profile web add dsh-resend-mcp
 ```
 
-Until that exists, `README.md` and `docs/outreach.md` must not claim a public
-install path.
+`dsh plugin --profile web add dsh-resend-mcp` is now the README install
+command; the first public publish used exactly this path.
 
 ### Why not publish from a laptop?
 
@@ -166,6 +166,9 @@ up yet; the artifact is identical.
 - Forgejo publishing works: `dsh-resend-mcp@0.1.0` was published on
   2026-10-23 from tag `v0.1.0` using the `NPM_TOKEN` secret. A Forgejo release
   with the same tag exists.
-- npmjs publishing is **not** set up; issue
-  [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) tracks the
-  public artifact and mirrors.
+- npmjs publishing works: `dsh-resend-mcp@0.1.0` is public via
+  `.forgejo/workflows/publish-npmjs.yml` and the `NPMJS_TOKEN` secret.
+  `npm view dsh-resend-mcp version` returns `0.1.0`.
+- A public **source** mirror is still open (issue #7): the `repository` and
+  `homepage` fields in `package.json` point at the private Forgejo repo, so the
+  npm page links to a 404 for anonymous visitors.

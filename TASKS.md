@@ -18,7 +18,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | T5 | Add tests (selection, prompt, manifest, secret scan) plus `dev-link` and `smoke` scripts | done | — |
 | T6 | Run syntax/tests/pack checks and a real-server smoke listing | done | — |
 | T7 | Install into the `web` profile, verify the live tool list, and send one test email to `pvlb.dev@gmail.com` | done | — |
-| T8 | Verify the command-line/tarball install path on a clean profile | open | [#5](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/5) |
+| T8 | Verify the command-line/tarball install path on a clean profile | in progress (install verified; Host restart pending) | [#5](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/5) |
 | T9 | Create Forgejo issues for the backlog and mirror them here | done | — |
 | T10 | Commit and push to `dsh-plugins/dsh-resend-mcp` as `dsh <dsh@pvlb.dev>` | done | — |
 
@@ -27,19 +27,19 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | ID | Task | Status | Issue |
 |---|---|---|---|
 | F1 | Add a Forgejo Actions workflow for `npm test` and `npm pack` (confirm runner labels first) | done | [#1](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/1) |
-| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | in progress (0.1.0 on Forgejo; npmjs workflow ready, token pending) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
+| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | done (npmjs + Forgejo; mirror split to F6) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
 | F3 | Add a settings surface for `defaultSender`, `preset`, and filters | open | [#3](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/3) |
 | F4 | Document the inbox preset workflow end to end | open | [#4](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/4) |
-| F5 | Send the Resend outreach email and propose a DeepSeek Harness docs tab | blocked (needs public artifact) | [#6](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/6) |
+| F5 | Send the Resend outreach email and propose a DeepSeek Harness docs tab | ready (npm package is public; mirror still pending) | [#6](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/6) |
+| F6 | Create a public source mirror (GitHub/Codeberg) so package metadata links resolve | open | [#7](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/7) |
 
-## Next session
+## Remaining
 
-1. Create the npmjs account/token and add the `NPMJS_TOKEN` repository secret;
-   do not paste the token into chat (steps in `docs/publishing.md`).
-2. Move tag `v0.1.0` to the latest `master` and push it. The Forgejo publish
-   step sees the existing 0.1.0 and skips; the npmjs workflow publishes.
-3. Verify `npm view dsh-resend-mcp@0.1.0`, then install from npmjs on a clean
-   profile (issue #5), update README/outreach, and close #2/#6.
+- #5: restart the Host once so the profile loads the npmjs-installed 0.1.0,
+  then confirm `resend_status` and the tools.
+- #7: public source mirror so the npm page's repository link resolves.
+- #3 and #4: settings surface and inbox workflow docs.
+- #6: send the outreach once #7 exists (or link only the npm page).
 
 ## Done
 
@@ -49,6 +49,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | T1–T7 | v0.1.0 implementation, docs, tests, profile install, and end-to-end test email | 2026-10-22 |
 | F1 | Forgejo Actions CI (`check`: tests + pack) green on the `docker` label | 2026-10-23 |
 | — | Published `dsh-resend-mcp@0.1.0` to the Forgejo npm registry and created release `v0.1.0` | 2026-10-23 |
+| F2 | Published `dsh-resend-mcp@0.1.0` to the public npm registry via tag `v0.1.0` | 2026-10-23 |
 
 ## Verification notes (2026-10-22 / CI 2026-10-23)
 
@@ -73,6 +74,18 @@ Status legend: `open` · `in progress` · `done` · `blocked`
   `write:package`); release `v0.1.0 — initial release` created.
 - Forgejo does not expose a `gitea` context: an automatic-token attempt was
   rejected by workflow schema validation. The `NPM_TOKEN` secret is required.
+- npmjs (2026-10-23): `publish-npmjs.yml` published `dsh-resend-mcp@0.1.0`
+  with `NPMJS_TOKEN`; `npm view dsh-resend-mcp version` returns `0.1.0`, and the
+  downloaded tarball has 13 files (same contents as the Forgejo build).
+- Clean profile (2026-10-23): `DSH_HOME=<tmp> dsh plugin --profile clean add
+  dsh-resend-mcp@0.1.0` installed a real 0.1.0 directory from npmjs. Missing
+  peers are expected there because no DSH runtime is installed.
+- Resolver dry-run: `loadProfileDirectory` + `createRuntimeResolution` reports
+  no skipped bundles and supplies `@deepseek-ai/schemastery` 3.18.5,
+  `dsh-tools`/`dsh-mcp-client` 0.2.0-rc.2, and `@modelcontextprotocol/client`
+  2.0.0 from the installation scope.
+- The live `web` profile was switched from the `link:` checkout to the
+  npmjs-installed 0.1.0; the Plugin Manager reports `restart-required`.
 
 ## Notes
 
