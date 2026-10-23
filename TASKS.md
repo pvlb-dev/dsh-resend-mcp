@@ -26,8 +26,8 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 
 | ID | Task | Status | Issue |
 |---|---|---|---|
-| F1 | Add a Forgejo Actions workflow for `npm test` and `npm pack` (confirm runner labels first) | in progress | [#1](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/1) |
-| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | in progress (Forgejo registry wired; npmjs account still needed) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
+| F1 | Add a Forgejo Actions workflow for `npm test` and `npm pack` (confirm runner labels first) | done | [#1](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/1) |
+| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | in progress (Forgejo registry wired; first publish pending) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
 | F3 | Add a settings surface for `defaultSender`, `preset`, and filters | open | [#3](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/3) |
 | F4 | Document the inbox preset workflow end to end | open | [#4](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/4) |
 | F5 | Send the Resend outreach email and propose a DeepSeek Harness docs tab | blocked (needs public artifact) | [#6](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/6) |
@@ -39,7 +39,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | — | Repository initialized with Apache-2.0 license and README | 2026-10-22 |
 | T1–T7 | v0.1.0 implementation, docs, tests, profile install, and end-to-end test email | 2026-10-22 |
 
-## Verification notes (2026-10-22)
+## Verification notes (2026-10-22 / CI 2026-10-23)
 
 - `npm test`: 27 passing.
 - `npm run check`: syntax checks + tests pass.
@@ -54,6 +54,9 @@ Status legend: `open` · `in progress` · `done` · `blocked`
   `01a16501-b85e-78b2-8b9c-d905153074b4`, status **delivered**.
 - Credential: `RESEND_API_KEY` configured via the `file` source; value never
   printed.
+- CI (2026-10-23): Forgejo Actions run for `0c12e12` succeeded (`check`,
+  1m24s) on the `docker` label; `npm run check` and `npm pack --dry-run` pass
+  on Node 22.6.
 
 ## Notes
 
