@@ -163,12 +163,12 @@ up yet; the artifact is identical.
 
 - CI is green on Forgejo Actions (`check`: `npm run check` + `npm pack
   --dry-run`, Node 22.6, `docker` label).
-- Forgejo publishing works: `dsh-resend-mcp@0.1.0` was published on
-  2026-10-23 from tag `v0.1.0` using the `NPM_TOKEN` secret. A Forgejo release
-  with the same tag exists.
-- npmjs publishing works: `dsh-resend-mcp@0.1.0` is public via
+- Forgejo publishing works: `0.1.0` and `0.1.1` were published on 2026-10-23
+  from tags `v0.1.0` / `v0.1.1` using the `NPM_TOKEN` secret. Forgejo releases
+  exist for both tags.
+- npmjs publishing works: `0.1.0` and `0.1.1` are public via
   `.forgejo/workflows/publish-npmjs.yml` and the `NPMJS_TOKEN` secret.
-  `npm view dsh-resend-mcp version` returns `0.1.0`.
+  `npm view dsh-resend-mcp version` returns `0.1.1` (0.1.1 is docs-only).
 - A public **source** mirror is still open (issue #7): the `repository` and
   `homepage` fields in `package.json` point at the private Forgejo repo, so the
   npm page links to a 404 for anonymous visitors.

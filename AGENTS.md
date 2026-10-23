@@ -190,7 +190,7 @@ dsh plugin --profile web add /absolute/path/to/dsh-resend-mcp
 
 # from a packed tarball
 npm pack
-dsh plugin --profile web add ./dsh-resend-mcp-0.1.0.tgz
+dsh plugin --profile web add ./dsh-resend-mcp-0.1.1.tgz
 ```
 
 After install, provide the key in the DSH Web UI: **Settings → Credentials →
@@ -237,7 +237,7 @@ Checked 2026-10-22, updated 2026-10-23:
   must never print it.
 - `pvlb.dev` is a verified Resend domain with sending enabled.
 - The plugin is installed in the `web` profile from npmjs
-  (`dsh-resend-mcp@0.1.0`) and selected in `dsh.profile.bundles`. The Host must
+  (`dsh-resend-mcp@0.1.1`) and selected in `dsh.profile.bundles`. The Host must
   restart to load it; until then the running process still holds the previous
   `link:` code and `resend_status` reports 9/137 tools.
 - End-to-end verification on 2026-10-22: `dsh@pvlb.dev` → `pvlb.dev@gmail.com`,
@@ -255,12 +255,14 @@ Checked 2026-10-22, updated 2026-10-23:
   `NPM_TOKEN` (a user token with `write:package`). Forgejo 17 does not provide a
   `gitea` context, so there is no automatic Actions token. `dsh-resend-mcp@0.1.0`
   was published on 2026-10-23 from tag `v0.1.0`, with release
-  `v0.1.0 — initial release`; see `docs/publishing.md`.
-- The same version is public on npmjs (`npm view dsh-resend-mcp version` →
-  `0.1.0`), published through `NPMJS_TOKEN` from tag `v0.1.0`. The live `web`
-  profile was switched from the `link:` checkout to the npmjs install on
-  2026-10-23, so the Plugin Manager reports `restart-required`; the running
-  process still holds the previously loaded link code until restart.
+  `v0.1.0 — initial release`; `v0.1.1` is a docs-only follow-up release.
+  See `docs/publishing.md`.
+- `0.1.1` is the latest public release on npmjs (`npm view dsh-resend-mcp
+  version` → `0.1.1`; `0.1.0` was the first). It is docs-only: the README now
+  leads with the npm install command. The live `web` profile was switched from
+  the `link:` checkout to the npmjs install (now `0.1.1`) on 2026-10-23, so the
+  Plugin Manager reports `restart-required`; the running process still holds the
+  previously loaded link code until restart.
 
 ## Conventions
 
@@ -287,7 +289,7 @@ Checked 2026-10-22, updated 2026-10-23:
 
 ## Roadmap and known limits
 
-- `dsh-resend-mcp@0.1.0` is public on npmjs and in the private Forgejo
+- `dsh-resend-mcp@0.1.1` is public on npmjs and in the private Forgejo
   registry. A public source mirror is still open (issue #7), so the
   `repository`/`homepage` links on the npm page point at the private Forgejo
   repo. Installs from Forgejo need a token and use a downloaded tarball; the

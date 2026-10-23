@@ -27,7 +27,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | ID | Task | Status | Issue |
 |---|---|---|---|
 | F1 | Add a Forgejo Actions workflow for `npm test` and `npm pack` (confirm runner labels first) | done | [#1](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/1) |
-| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | done (npmjs + Forgejo; mirror split to F6) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
+| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | done (0.1.1 on npmjs + Forgejo; mirror split to F6) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
 | F3 | Add a settings surface for `defaultSender`, `preset`, and filters | open | [#3](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/3) |
 | F4 | Document the inbox preset workflow end to end | open | [#4](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/4) |
 | F5 | Send the Resend outreach email and propose a DeepSeek Harness docs tab | ready (npm package is public; mirror still pending) | [#6](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/6) |
@@ -35,7 +35,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 
 ## Remaining
 
-- #5: restart the Host once so the profile loads the npmjs-installed 0.1.0,
+- #5: restart the Host once so the profile loads the npmjs-installed 0.1.1,
   then confirm `resend_status` and the tools.
 - #7: public source mirror so the npm page's repository link resolves.
 - #3 and #4: settings surface and inbox workflow docs.
@@ -50,6 +50,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | F1 | Forgejo Actions CI (`check`: tests + pack) green on the `docker` label | 2026-10-23 |
 | — | Published `dsh-resend-mcp@0.1.0` to the Forgejo npm registry and created release `v0.1.0` | 2026-10-23 |
 | F2 | Published `dsh-resend-mcp@0.1.0` to the public npm registry via tag `v0.1.0` | 2026-10-23 |
+| — | Published `0.1.1` (docs-only) to npmjs and Forgejo; release `v0.1.1` | 2026-10-23 |
 
 ## Verification notes (2026-10-22 / CI 2026-10-23)
 
@@ -75,8 +76,9 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 - Forgejo does not expose a `gitea` context: an automatic-token attempt was
   rejected by workflow schema validation. The `NPM_TOKEN` secret is required.
 - npmjs (2026-10-23): `publish-npmjs.yml` published `dsh-resend-mcp@0.1.0`
-  with `NPMJS_TOKEN`; `npm view dsh-resend-mcp version` returns `0.1.0`, and the
-  downloaded tarball has 13 files (same contents as the Forgejo build).
+  with `NPMJS_TOKEN`; `npm view dsh-resend-mcp version` now returns `0.1.1`
+  (docs-only patch, `latest` tag). The downloaded tarball has 12 files and no
+  secrets.
 - Clean profile (2026-10-23): `DSH_HOME=<tmp> dsh plugin --profile clean add
   dsh-resend-mcp@0.1.0` installed a real 0.1.0 directory from npmjs. Missing
   peers are expected there because no DSH runtime is installed.
@@ -85,7 +87,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
   `dsh-tools`/`dsh-mcp-client` 0.2.0-rc.2, and `@modelcontextprotocol/client`
   2.0.0 from the installation scope.
 - The live `web` profile was switched from the `link:` checkout to the
-  npmjs-installed 0.1.0; the Plugin Manager reports `restart-required`.
+  npmjs-installed 0.1.1; the Plugin Manager reports `restart-required`.
 
 ## Notes
 
