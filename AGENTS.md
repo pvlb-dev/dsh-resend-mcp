@@ -100,6 +100,7 @@ hard part (MCP result projection) from the shipped client.
 | `locale/en.json`, `icon.svg` | Plugin Manager display metadata |
 | `.forgejo/workflows/ci.yml` | Tests and `npm pack --dry-run` on pushes/PRs |
 | `.forgejo/workflows/publish.yml` | Tag-driven publish to the Forgejo npm registry |
+| `.forgejo/workflows/publish-npmjs.yml` | Tag-driven publish to npmjs; no-op without `NPMJS_TOKEN` |
 | `AGENTS.md`, `TASKS.md`, `README.md`, `docs/outreach.md` | Working notes, backlog, user docs, outreach |
 | `docs/publishing.md` | Release/publish guide written for non-npm people |
 

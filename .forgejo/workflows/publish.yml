@@ -47,6 +47,11 @@ jobs:
             exit 1
           fi
           registry="https://git.pvlb.dev/api/packages/dsh-plugins/npm/"
+          version="$(node -p "require('./package.json').version")"
           npm config set registry "$registry"
           npm config set "//git.pvlb.dev/api/packages/dsh-plugins/npm/:_authToken" "$NODE_AUTH_TOKEN"
+          if npm view "dsh-resend-mcp@$version" version --registry "$registry" >/dev/null 2>&1; then
+            echo "dsh-resend-mcp@$version is already in the Forgejo registry; skipping."
+            exit 0
+          fi
           npm publish

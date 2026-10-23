@@ -100,15 +100,16 @@ blocker.
 
 1. Create an account on <https://www.npmjs.com/signup>, enable 2FA (npm requires
    it for publishing), and verify the email.
-2. Create a **granular access token** (read/write, scoped to the package if it
-   exists, or to your user for the first publish).
-3. Add it as the repository secret `NPM_TOKEN_NPMJS` (keep the Forgejo token in
-   `NPM_TOKEN`).
-4. Add a second workflow job or a `publishConfig` override that publishes to
-   `https://registry.npmjs.org` with that token. Do not reuse the Forgejo
-   token.
+2. Create a **granular access token** with read/write access to packages and
+   the 2FA-bypass option enabled (required for non-interactive publishes).
+3. Add it as the repository secret `NPMJS_TOKEN` (keep the Forgejo token in
+   `NPM_TOKEN`). Never reuse one token for both registries.
+4. Nothing else: `.forgejo/workflows/publish-npmjs.yml` already publishes on
+   `v*` tags to `https://registry.npmjs.org` and skips cleanly while
+   `NPMJS_TOKEN` is absent.
 
-Then the public install is the one-liner:
+After the secret exists, push a new tag (or move the current one). Then the
+public install is the one-liner:
 
 ```bash
 dsh plugin --profile web add dsh-resend-mcp
