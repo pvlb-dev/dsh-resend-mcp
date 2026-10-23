@@ -32,6 +32,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | F4 | Document the inbox preset workflow end to end | open | [#4](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/4) |
 | F5 | Send the Resend outreach email and propose a DeepSeek Harness docs tab | ready (public on npm, Forgejo, and GitHub) | [#6](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/6) |
 | F6 | Create a public source mirror (GitHub/Codeberg) so package metadata links resolve | done | [#7](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/7) |
+| F7 | Adopt the pvlb.dev bootcamp: orientation block, `type/*`/`area/*`/`priority/*` labels, and the Gitea tool-bug registry in `AGENTS.md` | done | — |
 
 ## Remaining
 
@@ -39,6 +40,10 @@ Status legend: `open` · `in progress` · `done` · `blocked`
   then confirm `resend_status` and the tools.
 - #3 and #4: settings surface and inbox workflow docs.
 - #6: send the outreach (npm, Forgejo, and GitHub links are all public).
+- Standing: label every new issue at creation (create, then
+  `gitea_labels {action: "set"}` with numeric ids until dsh-gitea#6 lands) and
+  file a focused `dsh-gitea` issue for each new tool defect, adding its row to
+  the table in `AGENTS.md`.
 
 ## Done
 

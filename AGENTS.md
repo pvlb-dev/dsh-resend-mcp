@@ -5,6 +5,28 @@ This file is for an AI agent (or a human in a hurry) picking up
 architecture, how the plugin is installed and verified, and the rules that keep
 the project safe and reviewable.
 
+## Orientation — pvlb.dev
+
+This repo lives on the pvlb.dev forge:
+<https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp>. Before starting, read the
+bootcamp page:
+<https://git.pvlb.dev/pvlb-infra/vps-setup/wiki/DSH-Bootcamp> (repos and wikis
+are private — a browser `web_fetch` 404s; read it through an SSH clone). It
+covers the box, the global `dsh <dsh@pvlb.dev>` GPG-signed commit identity,
+`git` vs the `gitea_*` tools, and the house rules.
+
+- Default branch is `master` (`git fetch` before writing; other pvlb repos may
+  use `main`).
+- Every issue is labeled **at creation** with `type/*`, `area/*` and
+  `priority/*`; add `needs-operator` only for work only the operator can do.
+  See [Issues, labels, and the Gitea toolset](#issues-labels-and-the-gitea-toolset).
+- The `gitea_*` tools have known defects (registry below); prefer `git` over
+  SSH for file content.
+- The box is small (1.9 GiB RAM) and `workspace-write` forbids `sudo`; ask the
+  operator for privileged work.
+
+Project-specific rules below win over the bootcamp page.
+
 ## Goal
 
 Make [Resend](https://resend.com)'s hosted MCP server
@@ -272,6 +294,70 @@ Checked 2026-10-22, updated 2026-10-23:
   `0.1.2`) on 2026-10-23, so the Plugin Manager reports `restart-required`; the
   running process still holds the previously loaded link code until restart.
 
+## Issues, labels, and the Gitea toolset
+
+Labels are **per repository** in Forgejo. Every issue gets three axes at the
+moment it is opened — not "later, during triage":
+
+| Axis | Values |
+|---|---|
+| type | `type/task` (work), `type/bug` (defect) |
+| area | `area/dsh` for this repo; `area/host`, `area/backup`, `area/forgejo`, `area/security` only when one fits better |
+| priority | `priority/now` (broken or time-boxed), `priority/next` (after current work), `priority/later` (parked) |
+
+- If the priority is unclear use `next`. An unlabeled issue is worse than a
+  debatable priority: it disappears from every filter.
+- `needs-operator` goes on top **only** when the operator personally must act
+  (sudo, physical access, an account, or a decision only he can make). It is
+  the label he filters on, so do not put it on agent work.
+- The taxonomy and the rules are on the bootcamp page; this section mirrors it.
+  Keep the two in sync and put project-specific additions here.
+
+### Labeling an issue (current tooling)
+
+`gitea_issue_create` cannot set labels, assignee or milestone yet
+([dsh-gitea#6](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/6)), so:
+
+1. Create the issue.
+2. Get **numeric ids**. `gitea_labels {action: "list"}` currently prints names
+   only ([dsh-gitea#7](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/7)),
+   so use `GET /api/v1/repos/<owner>/<repo>/labels?limit=100` with
+   `GITEA_TOKEN`.
+3. `gitea_labels {action: "set", number, labels: [<ids>]}`.
+
+Names are silently ignored by `action: "set"`; always pass ids.
+
+If the repo lacks the set, create the missing labels first. Never label-bomb
+another project's backlog: rank and propose, the operator decides.
+
+### Known `gitea_*` tool defects
+
+One defect = one issue in
+[`dsh-plugins/dsh-gitea`](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues).
+The table is a working index; add a row when you find a bug and file the issue
+in the same sitting (symptom, observed vs expected, root cause `file:line` when
+known, proposed fix, acceptance).
+
+| Symptom | Real behaviour | Workaround | Issue |
+|---|---|---|---|
+| `gitea_wiki get` → `OK` | Forgejo's API returns page metadata only; the formatter has no wiki branch | clone `ssh://git@git.pvlb.dev/<owner>/<repo>.wiki.git` | [#4](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/4) |
+| `gitea_repo_contents` → filename | formatter returns `data.path`, not the body; `path: ""` errors | `git clone`, or REST `/api/v1/repos/<owner>/<repo>/contents/<path>` with `GITEA_TOKEN` | [#3](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/3) |
+| `gitea_issue_list` with `limit > 20` | formatter slices to 20 rows; the offset still uses `limit`, so page 2 is skipped | always `limit <= 20`, page through | [#2](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/2) |
+| empty result → bare `OK` | "no rows", "done" and "unrecognised" are indistinguishable | verify with a second query or the REST API | [#5](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/5) |
+| `gitea_issue_create` with `labels` | labels/assignee/milestone are dropped; not in the tool schema | create, then `gitea_labels {action: "set"}` with numeric ids | [#6](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/6) |
+| `gitea_labels list` hides ids | formatter prints `name` only; `action: "set"` requires numeric ids | fetch ids from REST `/api/v1/repos/<owner>/<repo>/labels` | [#7](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/7) |
+
+- The fork we can fix is the checkout at `~/Projects/dsh-gitea`
+  (branch `main`); tool fixes belong there, not in this repo.
+- The fuller working index lives in
+  [`pvlb-infra/issue-tracker/AGENTS.md`](https://git.pvlb.dev/pvlb-infra/issue-tracker/src/branch/master/AGENTS.md)
+  under *Tool bugs observed*. Search open issues there before filing a new one:
+  the first report (#1) was a consolidated list that had to be split into
+  #2–#6.
+- For exact bulk reads prefer the REST API over the tools:
+  `curl -s -H "Authorization: token $GITEA_TOKEN" ...`. Never print or commit
+  the token.
+
 ## Conventions
 
 - Plain ESM JavaScript, no TypeScript build step. Keep modules small and pure
@@ -281,7 +367,9 @@ Checked 2026-10-22, updated 2026-10-23:
   relevant.
 - Never commit secrets, tokens, `.env` files, or generated tarballs.
 - Never log request headers, resolved credentials, or full config objects.
-- Keep `TASKS.md` and the Forgejo backlog in sync; link issues by URL.
+- Keep `TASKS.md` and the Forgejo backlog in sync; link issues by URL. Label
+  new issues at creation as described above.
+- File a Gitea tool bug when you hit one, and add its row to the table above.
 - Use `dsh <dsh@pvlb.dev>` for commits and push only to
   `dsh-plugins/dsh-resend-mcp`.
 
@@ -293,7 +381,10 @@ Checked 2026-10-22, updated 2026-10-23:
 - One real email reaches `pvlb.dev@gmail.com` through the installed plugin.
 - No secret appears in config, logs, git, or tool output.
 - README, AGENTS.md, and TASKS.md describe the current behavior.
-- Open follow-ups are recorded as Forgejo issues.
+- Open follow-ups are recorded as **labeled** Forgejo issues (`type/*`,
+  `area/*`, `priority/*`).
+- A Gitea tool bug found along the way is filed (one defect per issue) and
+  linked from the table above.
 
 ## Roadmap and known limits
 
