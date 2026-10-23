@@ -327,8 +327,11 @@ moment it is opened — not "later, during triage":
 
 Names are silently ignored by `action: "set"`; always pass ids.
 
-If the repo lacks the set, create the missing labels first. Never label-bomb
-another project's backlog: rank and propose, the operator decides.
+If the repo lacks the set, create the missing labels with
+`gitea_labels {action: "create"}` — **not** `gitea_label_bootstrap`, which
+hard-codes the upstream taxonomy and conflicts with the house set
+([dsh-gitea#8](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/8)). Never
+label-bomb another project's backlog: rank and propose, the operator decides.
 
 ### Known `gitea_*` tool defects
 
@@ -346,6 +349,7 @@ known, proposed fix, acceptance).
 | empty result → bare `OK` | "no rows", "done" and "unrecognised" are indistinguishable | verify with a second query or the REST API | [#5](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/5) |
 | `gitea_issue_create` with `labels` | labels/assignee/milestone are dropped; not in the tool schema | create, then `gitea_labels {action: "set"}` with numeric ids | [#6](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/6) |
 | `gitea_labels list` hides ids | formatter prints `name` only; `action: "set"` requires numeric ids | fetch ids from REST `/api/v1/repos/<owner>/<repo>/labels` | [#7](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/7) |
+| `gitea_label_bootstrap` | creates the upstream taxonomy (`status/*`, `scope/*`, …), not the house set | create the house labels by hand; do not bootstrap | [#8](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/8) |
 
 - The fork we can fix is the checkout at `~/Projects/dsh-gitea`
   (branch `main`); tool fixes belong there, not in this repo.
