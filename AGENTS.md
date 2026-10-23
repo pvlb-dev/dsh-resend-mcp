@@ -246,9 +246,11 @@ Checked 2026-10-22:
   `docker` and `ubuntu-latest`, runs **one job at a time**, and gives job
   containers `node`, `git`, and Docker access. CI and publish workflows live in
   `.forgejo/workflows/`.
-- Publishing to the Forgejo npm registry needs the repository secret
-  `NPM_TOKEN` (a user token with `write:package`). The first publish is still
-  pending; see `docs/publishing.md` and issue #2.
+- Publishing to the Forgejo npm registry uses the repository secret
+  `NPM_TOKEN` (a user token with `write:package`). Forgejo 17 does not provide a
+  `gitea` context, so there is no automatic Actions token. `dsh-resend-mcp@0.1.0`
+  was published on 2026-10-23 from tag `v0.1.0` (commit `98e6e23`), with release
+  `v0.1.0 — initial release`; see `docs/publishing.md`.
 
 ## Conventions
 
@@ -275,9 +277,9 @@ Checked 2026-10-22:
 
 ## Roadmap and known limits
 
-- Publishing to the Forgejo npm registry is wired but not yet exercised; npmjs
-  and a public mirror are still open (issue #2). Installs currently use a path
-  or tarball, or a tarball downloaded from the private registry.
+- `dsh-resend-mcp@0.1.0` is published to the Forgejo npm registry; npmjs and a
+  public mirror are still open (issue #2). Installs from Forgejo need a token
+  and use a downloaded tarball; public installs still use a path or tarball.
 - No settings UI; sender/preset are YAML fields.
 - No inbox preset enabled by default; it is available as `preset: inbox`.
 - Local validation enforces only DSH's JSON Schema subset. Resend keywords such

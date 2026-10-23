@@ -27,7 +27,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | ID | Task | Status | Issue |
 |---|---|---|---|
 | F1 | Add a Forgejo Actions workflow for `npm test` and `npm pack` (confirm runner labels first) | done | [#1](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/1) |
-| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | in progress (Forgejo registry wired; first publish pending) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
+| F2 | Publish `dsh-resend-mcp` to npm and create a public mirror for external users | in progress (0.1.0 on Forgejo; npmjs/public pending) | [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) |
 | F3 | Add a settings surface for `defaultSender`, `preset`, and filters | open | [#3](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/3) |
 | F4 | Document the inbox preset workflow end to end | open | [#4](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/4) |
 | F5 | Send the Resend outreach email and propose a DeepSeek Harness docs tab | blocked (needs public artifact) | [#6](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/6) |
@@ -38,12 +38,14 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 |---|---|---|
 | — | Repository initialized with Apache-2.0 license and README | 2026-10-22 |
 | T1–T7 | v0.1.0 implementation, docs, tests, profile install, and end-to-end test email | 2026-10-22 |
+| F1 | Forgejo Actions CI (`check`: tests + pack) green on the `docker` label | 2026-10-23 |
+| — | Published `dsh-resend-mcp@0.1.0` to the Forgejo npm registry and created release `v0.1.0` | 2026-10-23 |
 
 ## Verification notes (2026-10-22 / CI 2026-10-23)
 
 - `npm test`: 27 passing.
 - `npm run check`: syntax checks + tests pass.
-- `npm pack --dry-run`: 11 files, ~18 KB packed, no secrets or node_modules.
+- `npm pack --dry-run`: 12 files, ~21 KB packed, no secrets or node_modules.
 - Standalone smoke: connected to `https://mcp.resend.com/mcp`, server
   `resend 1.2.1`, 137 tools available, `sending` preset selects 9.
 - `plugin_manager install_bundle`: `application: applied`; bundle selected in
@@ -57,6 +59,11 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 - CI (2026-10-23): Forgejo Actions run for `0c12e12` succeeded (`check`,
   1m24s) on the `docker` label; `npm run check` and `npm pack --dry-run` pass
   on Node 22.6.
+- Publish (2026-10-23): tag `v0.1.0` on `98e6e23` published
+  `dsh-resend-mcp@0.1.0` to the Forgejo npm registry (`NPM_TOKEN` secret with
+  `write:package`); release `v0.1.0 — initial release` created.
+- Forgejo does not expose a `gitea` context: an automatic-token attempt was
+  rejected by workflow schema validation. The `NPM_TOKEN` secret is required.
 
 ## Notes
 

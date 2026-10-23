@@ -160,7 +160,11 @@ up yet; the artifact is identical.
 
 ## Current status
 
-- The CI and publish workflows exist.
-- Forgejo publishing is wired but needs `NPM_TOKEN` before the first tag.
+- CI is green on Forgejo Actions (`check`: `npm run check` + `npm pack
+  --dry-run`, Node 22.6, `docker` label).
+- Forgejo publishing works: `dsh-resend-mcp@0.1.0` was published on
+  2026-10-23 from tag `v0.1.0` using the `NPM_TOKEN` secret. A Forgejo release
+  with the same tag exists.
 - npmjs publishing is **not** set up; issue
-  [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) tracks it.
+  [#2](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/2) tracks the
+  public artifact and mirrors.

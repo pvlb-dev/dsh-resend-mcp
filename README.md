@@ -14,7 +14,9 @@ connection, credential reference, and active filter without revealing the key.
 
 **Status:** v0.1.0, verified on 2026-10-22 against DSH `0.2.0-rc.2` and Resend's
 live MCP server: 9 tools registered from 137 available, and a test email was
-delivered from `dsh@pvlb.dev` to `pvlb.dev@gmail.com`.
+delivered from `dsh@pvlb.dev` to `pvlb.dev@gmail.com`. CI runs on Forgejo
+Actions, and `dsh-resend-mcp@0.1.0` is published to the private Forgejo npm
+registry (public npm is still pending, issue #2).
 
 ## Why a subset?
 
@@ -71,8 +73,8 @@ Once the package is on npmjs:
 dsh plugin --profile web add dsh-resend-mcp
 ```
 
-The private Forgejo npm registry also works today, but downloads need a token
-and the tarball is installed explicitly; see
+The private Forgejo npm registry already hosts `dsh-resend-mcp@0.1.0`, but
+downloads need a token and the tarball is installed explicitly; see
 [docs/publishing.md](docs/publishing.md). It is not a public install path.
 
 After install, restart or reload the profile if the Plugin Manager reports
