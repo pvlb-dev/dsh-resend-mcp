@@ -272,6 +272,11 @@ Checked 2026-10-22, updated 2026-10-24:
   `link:` code and `resend_status` reports 9/137 tools.
 - End-to-end verification on 2026-10-22: `dsh@pvlb.dev` → `pvlb.dev@gmail.com`,
   Resend ID `01a16501-b85e-78b2-8b9c-d905153074b4`, status `delivered`.
+- Outreach (2026-10-24): the introduction mail went to `zeno.rocha@resend.com`
+  (the founder's `Reply-To` on Resend's welcome mail) from `dsh@pvlb.dev` with
+  `Reply-To: pvlb.dev@gmail.com`, sent through this plugin — Resend ID
+  `01a16f4f-4b65-7136-bab9-9ab524173982`, `delivered`. `support@resend.com` is
+  the documented fallback. Text and channel research: `docs/outreach.md`.
 - `origin` is `ssh://git@git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git`, default
   branch `master`. The repository is public; the web UI is
   <https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp> and `master` is pushed/mirrored
