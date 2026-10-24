@@ -23,6 +23,28 @@ registered from 137 available, and a test email was delivered from
 [npmjs](https://www.npmjs.com/package/dsh-resend-mcp) and in the Forgejo
 registry.
 
+## What it looks like
+
+One install command and one credential entry, and the model gets nine
+`mcp__resend__*` tools plus a diagnostic. Real output from `resend_status` on
+the reference deployment (DSH `0.2.0-rc.2`, Resend MCP server `1.2.1`):
+
+```text
+Resend MCP: connected
+Endpoint: https://mcp.resend.com/mcp
+Namespace: resend
+Preset: sending
+Credential: RESEND_API_KEY (configured via file)
+Tools: 9/137 registered
+Registered: create-contact, get-contact, get-email, list-broadcasts,
+            list-contacts, list-domains, list-emails, list-templates, send-email
+```
+
+The send path is verified end to end: a message sent from `dsh@pvlb.dev`
+reported `delivered`, and `mcp__resend__get-email` returned it by its Resend
+ID. `mcp__resend__list-domains` confirms the sending domain is verified with
+sending enabled.
+
 ## Why a subset?
 
 Resend's MCP server currently exposes **137 tools** whose JSON schemas total

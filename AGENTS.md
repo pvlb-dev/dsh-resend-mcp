@@ -125,6 +125,7 @@ hard part (MCP result projection) from the shipped client.
 | `.forgejo/workflows/publish-npmjs.yml` | Tag-driven publish to npmjs; no-op without `NPMJS_TOKEN` |
 | `AGENTS.md`, `TASKS.md`, `README.md`, `docs/outreach.md` | Working notes, backlog, user docs, outreach |
 | `docs/publishing.md` | Release/publish guide written for non-npm people |
+| `docs/marketplace.md` | dsh-plugin.org listing: requirements matrix, paste-ready submission, catalog checks |
 
 ## Configuration
 
@@ -255,7 +256,7 @@ Live checks (Host tools):
 
 ## Deployment facts for this checkout
 
-Checked 2026-10-22, updated 2026-10-23:
+Checked 2026-10-22, updated 2026-10-24:
 
 - DSH `0.2.0-rc.2`, profile `web`, profile directory `$DSH_PROFILE_DIR`.
 - Web GUI: `http://127.0.0.1:3080`.
@@ -293,6 +294,15 @@ Checked 2026-10-22, updated 2026-10-23:
   profile was switched from the `link:` checkout to the npmjs install (now
   `0.1.2`) on 2026-10-23, so the Plugin Manager reports `restart-required`; the
   running process still holds the previously loaded link code until restart.
+- Marketplace (2026-10-24): the community hub <https://dsh-plugin.org> lists
+  plugins by GitHub topic, so the **GitHub mirror is the listing target** — it
+  carries the topic `dsh-plugin`; the Forgejo repo stays the source home.
+  Requirements, the paste-ready submission, and catalog checks are in
+  `docs/marketplace.md`. The hub's machine-readable catalog is
+  `https://api.dsh-plugin.org/plugins.zh.json` (5,100 entries on 2026-10-24,
+  refreshed on a cycle that has been seen lagging npm by a day or more); new
+  entries start as `unconfirmed` and the submission issue is what triggers the
+  manual check that flips them to `verified`.
 
 ## Issues, labels, and the Gitea toolset
 
@@ -319,10 +329,10 @@ moment it is opened — not "later, during triage":
 ([dsh-gitea#6](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/6)), so:
 
 1. Create the issue.
-2. Get **numeric ids**. `gitea_labels {action: "list"}` currently prints names
-   only ([dsh-gitea#7](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/7)),
-   so use `GET /api/v1/repos/<owner>/<repo>/labels?limit=100` with
-   `GITEA_TOKEN`.
+2. Get **numeric ids**. `gitea_labels {action: "list"}` prints them as
+   `area/dsh (id: 35, #8b5cf6)` — verified 2026-10-24 (dsh-gitea#7 fixed). The
+   REST route with `GITEA_TOKEN`
+   (`GET /api/v1/repos/<owner>/<repo>/labels?limit=100`) stays the fallback.
 3. `gitea_labels {action: "set", number, labels: [<ids>]}`.
 
 Names are silently ignored by `action: "set"`; always pass ids.
@@ -348,7 +358,7 @@ known, proposed fix, acceptance).
 | `gitea_issue_list` with `limit > 20` | formatter slices to 20 rows; the offset still uses `limit`, so page 2 is skipped | always `limit <= 20`, page through | [#2](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/2) |
 | empty result → bare `OK` | "no rows", "done" and "unrecognised" are indistinguishable | verify with a second query or the REST API | [#5](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/5) |
 | `gitea_issue_create` with `labels` | labels/assignee/milestone are dropped; not in the tool schema | create, then `gitea_labels {action: "set"}` with numeric ids | [#6](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/6) |
-| `gitea_labels list` hides ids | formatter prints `name` only; `action: "set"` requires numeric ids | fetch ids from REST `/api/v1/repos/<owner>/<repo>/labels` | [#7](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/7) |
+| `gitea_labels list` hides ids — **fixed 2026-10-24** | now prints `name (id: N, #color)`; `action: "set"` requires the numeric ids | none needed; REST remains the fallback | [#7](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/7) |
 | `gitea_label_bootstrap` | creates the upstream taxonomy (`status/*`, `scope/*`, …), not the house set | create the house labels by hand; do not bootstrap | [#8](https://git.pvlb.dev/dsh-plugins/dsh-gitea/issues/8) |
 
 - The fork we can fix is the checkout at `~/Projects/dsh-gitea`
@@ -397,6 +407,9 @@ known, proposed fix, acceptance).
   `repository`/`homepage` fields point at the public Forgejo URL. Forgejo
   installs still need the registry configured and use a downloaded tarball; the
   public install is `dsh plugin --profile web add dsh-resend-mcp`.
+- Marketplace listing is in flight: the GitHub topic and README proof block are
+  in place, the submission issue is drafted in `docs/marketplace.md`. No listing
+  URL exists until the hub's crawler picks the mirror up.
 - No settings UI; sender/preset are YAML fields.
 - No inbox preset enabled by default; it is available as `preset: inbox`.
 - Local validation enforces only DSH's JSON Schema subset. Resend keywords such
