@@ -300,9 +300,10 @@ Checked 2026-10-22, updated 2026-10-24:
   Requirements, the paste-ready submission, and catalog checks are in
   `docs/marketplace.md`. The hub's machine-readable catalog is
   `https://api.dsh-plugin.org/plugins.zh.json` (5,100 entries on 2026-10-24,
-  refreshed on a cycle that has been seen lagging npm by a day or more); new
-  entries start as `unconfirmed` and the submission issue is what triggers the
-  manual check that flips them to `verified`.
+  refreshed on a cycle that has been seen lagging npm by a day or more; the
+  published catalogs carry **verified** entries only, `stats.json` reported
+  `total == verified`). New entries start as `unconfirmed`, and the submission
+  issue is what triggers the manual check that flips them to `verified`.
 
 ## Issues, labels, and the Gitea toolset
 

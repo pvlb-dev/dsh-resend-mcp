@@ -91,13 +91,20 @@ Real `resend_status` output and the verified send path are in the README, sectio
 ## Verifying the listing
 
 The hub serves a machine-readable catalog, which is a better check than
-eyeballing the page:
+eyeballing the page. The API documents itself at
+<https://api.dsh-plugin.org/>: `GET /plugins.{lang}.json` (catalogs),
+`GET /stats.json`, `GET /cmd/{owner}/{slug}.json` (install command for one
+plugin), `GET /hub.json`, `GET /about.json`.
 
 ```bash
-curl -s https://api.dsh-plugin.org/plugins.zh.json | python3 -c '
+# English catalog; plugins.zh.json carries the same entries with zh fields
+curl -s https://api.dsh-plugin.org/plugins.en.json | python3 -c '
 import json, sys
 hits = [p for p in json.load(sys.stdin) if p.get("o") == "pvlb-dev"]
 print(json.dumps(hits, ensure_ascii=False, indent=2))'
+
+# once listed, this returns the install command instead of 404
+curl -s https://api.dsh-plugin.org/cmd/pvlb-dev/dsh-resend-mcp.json
 ```
 
 Useful fields per entry: `o` owner, `n` name, `c` category code, `vr` indexed
@@ -106,11 +113,14 @@ version, `r.npmPackage` matched npm package, `ic` install command, `v`
 stars/forks. The detail page is
 <https://dsh-plugin.org/plugins/pvlb-dev/dsh-resend-mcp> (404 until listed).
 
-Expect a delay: the crawler refreshes on a cycle, not on demand, and the
-catalog has been observed lagging npm by more than a day
+Expect a delay, and expect two stages. The crawler refreshes on a cycle, not on
+demand, and the catalog has been observed lagging npm by more than a day
 ([dsh-plugin-hub#427](https://github.com/dshplugin/dsh-plugin-hub/issues/427)).
-Every new listing starts as `unconfirmed` and becomes `verified` after a manual
-check, which the submission issue triggers.
+On 2026-10-24 `/stats.json` reported `{"total": 5100, "verified": 5100}` — the
+published catalogs only carry verified entries, so **absence from the JSON does
+not mean the submission was refused**: the website may show the entry as
+`unconfirmed` first, and the manual check that the submission issue triggers is
+what moves it into the catalog and the in-DSH Plugin Hub.
 
 ## After the listing appears
 
