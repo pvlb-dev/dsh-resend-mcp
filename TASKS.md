@@ -34,6 +34,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | F6 | Create a public source mirror (GitHub/Codeberg) so package metadata links resolve | done | [#7](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/7) |
 | F7 | Adopt the pvlb.dev bootcamp: orientation block, `type/*`/`area/*`/`priority/*` labels, and the Gitea tool-bug registry in `AGENTS.md` | done | — |
 | F8 | Get the plugin listed on dsh-plugin.org: GitHub topic, README proof block, submission text | in progress (topic set and README done; hub issue pending) | [#8](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/8) |
+| F9 | Give the agent an inbound address via a Resend Inbox in forwarding mode (no MX change) | open (operator: dashboard inbox + Namecheap rule) | [#9](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/9) |
 
 ## Remaining
 
@@ -42,6 +43,8 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 - #3 and #4: settings surface and inbox workflow docs.
 - #8: the operator posts the submission issue on the GitHub hub; then verify
   the catalog entry, add the README badge, and publish the docs-only `0.1.3`.
+- #9: inbound mail — create the Resend inbox in forwarding mode and add the
+  Namecheap rule, then switch the plugin to `preset: inbox` and verify a thread.
 - Standing: label every new issue at creation (create, then
   `gitea_labels {action: "set"}` with numeric ids until dsh-gitea#6 lands) and
   file a focused `dsh-gitea` issue for each new tool defect, adding its row to

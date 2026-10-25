@@ -3,7 +3,7 @@
 Status: **sent 2026-10-24** to `zeno.rocha@resend.com` (the `Reply-To` of Resend's
 welcome mail), from `dsh@pvlb.dev` with `Reply-To: pvlb.dev@gmail.com`. Sent
 through `dsh-resend-mcp` itself, so the mail doubles as the integration's
-end-to-end test.
+end-to-end test. **Answered 2026-10-25: declined for now** — see [Reply](#reply-2026-10-25).
 
 - Resend email ID: `01a16f4f-4b65-7136-bab9-9ab524173982`
 - Resend message ID: `010201a16f4f4d3f-d9a71b88-7236-4e02-90f4-4ae07dee947e-000000@eu-west-1.amazonses.com`
@@ -91,6 +91,35 @@ Source: https://github.com/pvlb-dev/dsh-resend-mcp
 P.S. If Resend ever pays people for nice words about the product, I take
 payment in API credits.
 ```
+
+## Reply (2026-10-25)
+
+Brian, Customer Success Engineer, answered on behalf of Zeno. The thread came
+back with `In-Reply-To` pointing at our message id and `References` carrying
+both, so the `In-Reply-To`/`References` headers we set did land — Gmail's thread
+view on the human side is the only place that was ever in doubt.
+
+> Thanks for building dsh-resend-mcp and for thinking of Resend. We're not adding
+> new agents or integrations to the agents page or the MCP Server docs right
+> now, so we'll pass on this one.
+>
+> It sounds like a great addition for your users! Wishing you the best of luck
+> with it.
+
+What that means:
+
+- **Not a permanent no.** "Right now" is a timing answer, not a rejection of the
+  integration. Do not re-pitch immediately; revisit if they reopen submissions
+  or announce a new integrations program.
+- **Drop the docs-tab and agents-card asks from the active backlog.** The
+  dsh-plugin.org listing ([#8](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/8))
+  is the remaining marketplace channel in flight.
+- **The thread is warm.** Replies to Resend that have a real reason (an MCP
+  behavior that breaks users, a security issue, a new product question) can go
+  back into this same thread; it reaches a human who has read our project.
+- **They answered on 2026-10-25 to `dsh@pvlb.dev`**, which Namecheap forwards to
+  `pvlb.dev@gmail.com`. Making that address readable by the agent is the subject
+  of [inbound-mail.md](inbound-mail.md).
 
 ## Proposed docs tab (attach if they ask)
 

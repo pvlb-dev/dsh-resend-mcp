@@ -126,6 +126,7 @@ hard part (MCP result projection) from the shipped client.
 | `AGENTS.md`, `TASKS.md`, `README.md`, `docs/outreach.md` | Working notes, backlog, user docs, outreach |
 | `docs/publishing.md` | Release/publish guide written for non-npm people |
 | `docs/marketplace.md` | dsh-plugin.org listing: requirements matrix, paste-ready submission, catalog checks |
+| `docs/inbound-mail.md` | Inbound mail options (Resend Receiving vs Inboxes, MX rules, quotas, rollout) |
 
 ## Configuration
 
@@ -277,6 +278,14 @@ Checked 2026-10-22, updated 2026-10-24:
   `Reply-To: pvlb.dev@gmail.com`, sent through this plugin — Resend ID
   `01a16f4f-4b65-7136-bab9-9ab524173982`, `delivered`. `support@resend.com` is
   the documented fallback. Text and channel research: `docs/outreach.md`.
+- Verdict on that outreach (2026-10-25): Resend **declined for now** — "we're not
+  adding new agents or integrations to the agents page or the MCP Server docs
+  right now". Not a permanent no, but do not re-pitch; the thread stays warm for
+  substantive reasons only. Do not resurrect the docs-tab ask without a trigger.
+- Inbound mail (researched 2026-10-24, not implemented): Resend Inboxes suit an
+  agent mailbox and are exposed over MCP; `forwarding: true` avoids any MX
+  change on `pvlb.dev`. Options, quotas, and the rollout are in
+  `docs/inbound-mail.md`; the setup itself is an operator task (#9).
 - `origin` is `ssh://git@git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git`, default
   branch `master`. The repository is public; the web UI is
   <https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp> and `master` is pushed/mirrored
