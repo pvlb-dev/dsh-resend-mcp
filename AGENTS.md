@@ -218,7 +218,7 @@ dsh plugin --profile web add /absolute/path/to/dsh-resend-mcp
 
 # from a packed tarball
 npm pack
-dsh plugin --profile web add ./dsh-resend-mcp-0.1.2.tgz
+dsh plugin --profile web add ./dsh-resend-mcp-0.1.3.tgz
 ```
 
 After install, add `RESEND_API_KEY` to the local credential store,
@@ -299,15 +299,15 @@ Checked 2026-10-22, updated 2026-10-24:
   `.forgejo/workflows/`.
 - Publishing to the Forgejo npm registry uses the repository secret
   `NPM_TOKEN` (a user token with `write:package`). Forgejo 17 does not provide a
-  `gitea` context, so there is no automatic Actions token. `0.1.0`, `0.1.1`, and
-  `0.1.2` were published on 2026-10-23 from tags `v0.1.0` / `v0.1.1` / `v0.1.2`;
-  the later two are docs/metadata only. See `docs/publishing.md`.
-- `0.1.2` is the latest public release on npmjs (`npm view dsh-resend-mcp
-  version` → `0.1.2`). It makes the package metadata point at the public
-  Forgejo repo (HTTPS) and corrects the credential instructions. The live `web`
-  profile was switched from the `link:` checkout to the npmjs install (now
-  `0.1.2`) on 2026-10-23, so the Plugin Manager reports `restart-required`; the
-  running process still holds the previously loaded link code until restart.
+  `gitea` context, so there is no automatic Actions token. `0.1.0`, `0.1.1`,
+  `0.1.2`, and `0.1.3` were published from tags `v0.1.0` / `v0.1.1` / `v0.1.2` /
+  `v0.1.3` (2026-10-23 and 2026-10-26). The later three are docs/metadata only.
+  See `docs/publishing.md`.
+- `0.1.3` is the latest public release on npmjs (`npm view dsh-resend-mcp
+  version` → `0.1.3`): documentation and metadata only — the dsh-plugin.org badge
+  and listing link in the README, plus corrected version references. The live
+  `web` profile was switched from the `link:` checkout to the npmjs install
+  (`0.1.2`) on 2026-10-23 and reports `restart-required` until the Host restarts.
 - Marketplace (2026-10-24): the community hub <https://dsh-plugin.org> lists
   plugins by GitHub topic, so the **GitHub mirror is the listing target** — it
   carries the topic `dsh-plugin`; the Forgejo repo stays the source home.
@@ -318,6 +318,18 @@ Checked 2026-10-22, updated 2026-10-24:
   published catalogs carry **verified** entries only, `stats.json` reported
   `total == verified`). New entries start as `unconfirmed`, and the submission
   issue is what triggers the manual check that flips them to `verified`.
+- Marketplace outcome (2026-10-25): **listed and verified** at
+  <https://dsh-plugin.org/plugins/pvlb-dev/dsh-resend-mcp>. The submission issue
+  [dshplugin/dsh-plugin-hub#429](https://github.com/dshplugin/dsh-plugin-hub/issues/429)
+  was closed by the maintainer the same day, with the note that the in-app Hub
+  picks up the one-click entry "after the next sync". As of 2026-10-26 the
+  resolved command is still `github:pvlb-dev/dsh-resend-mcp` with
+  `manualInstall: true`, and the entry is absent from `plugins.en.json` — that
+  JSON carries only npm-resolved entries (5,245 of the site's 17,316). **Do not
+  change `package.json` to force it**: the hub matches on the package *name*, not
+  the `repository` field (`dsh-edit-resend` has no `repository` and still
+  resolved). If a sync or two does not switch the command, comment on hub#429
+  with the `cmd` payload.
 
 ## Issues, labels, and the Gitea toolset
 
@@ -417,14 +429,15 @@ known, proposed fix, acceptance).
 
 ## Roadmap and known limits
 
-- `dsh-resend-mcp@0.1.2` is public on npmjs and in the Forgejo registry. The
+- `dsh-resend-mcp@0.1.3` is public on npmjs and in the Forgejo registry. The
   source is public at both the Forgejo home and the GitHub mirror, and the
   `repository`/`homepage` fields point at the public Forgejo URL. Forgejo
   installs still need the registry configured and use a downloaded tarball; the
   public install is `dsh plugin --profile web add dsh-resend-mcp`.
-- Marketplace listing is in flight: the GitHub topic and README proof block are
-  in place, the submission issue is drafted in `docs/marketplace.md`. No listing
-  URL exists until the hub's crawler picks the mirror up.
+- Listed on dsh-plugin.org and verified (2026-10-25); the entry is published
+  with the source fallback install command until the hub's next npm sync. See
+  `docs/marketplace.md` for the current state and the evidence about how the hub
+  resolves packages.
 - No settings UI; sender/preset are YAML fields.
 - No inbox preset enabled by default; it is available as `preset: inbox`.
 - Local validation enforces only DSH's JSON Schema subset. Resend keywords such

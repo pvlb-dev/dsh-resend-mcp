@@ -85,8 +85,8 @@ Download the tarball and install that instead (the package is public, so no
 token is needed to read it):
 
 ```bash
-npm pack dsh-resend-mcp@0.1.2 --registry https://git.pvlb.dev/api/packages/dsh-plugins/npm/
-dsh plugin --profile web add ./dsh-resend-mcp-0.1.2.tgz
+npm pack dsh-resend-mcp@0.1.3 --registry https://git.pvlb.dev/api/packages/dsh-plugins/npm/
+dsh plugin --profile web add ./dsh-resend-mcp-0.1.3.tgz
 ```
 
 ## Option B — npmjs (public install)
@@ -160,12 +160,12 @@ up yet; the artifact is identical.
 
 - CI is green on Forgejo Actions (`check`: `npm run check` + `npm pack
   --dry-run`, Node 22.6, `docker` label).
-- Forgejo publishing works: `0.1.0`, `0.1.1`, and `0.1.2` were published on
-  2026-10-23 from tags `v0.1.0` / `v0.1.1` / `v0.1.2` using the `NPM_TOKEN`
-  secret. Forgejo releases exist for the tagged versions.
+- Forgejo publishing works: `0.1.0`, `0.1.1`, `0.1.2`, and `0.1.3` were
+  published from tags `v0.1.0` / `v0.1.1` / `v0.1.2` / `v0.1.3` using the
+  `NPM_TOKEN` secret. Forgejo releases exist for the tagged versions.
 - npmjs publishing works: the same versions are public via
   `.forgejo/workflows/publish-npmjs.yml` and the `NPMJS_TOKEN` secret.
-  `npm view dsh-resend-mcp version` returns `0.1.2` (0.1.1 and 0.1.2 are
+  `npm view dsh-resend-mcp version` returns `0.1.3` (0.1.1, 0.1.2, and 0.1.3 are
   docs/metadata only).
 - The source is public in two places:
   <https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp> (home) and

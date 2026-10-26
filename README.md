@@ -1,10 +1,13 @@
 # dsh-resend-mcp
 
+[![Listed on dsh-plugin.org](https://dsh-plugin.org/badges/listed.svg)](https://dsh-plugin.org/plugins/pvlb-dev/dsh-resend-mcp)
+
 Resend email tools for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness),
 wrapped as an installable DSH bundle.
 
 **Home:** <https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp> ·
-**Mirror:** <https://github.com/pvlb-dev/dsh-resend-mcp>
+**Mirror:** <https://github.com/pvlb-dev/dsh-resend-mcp> ·
+**Listing:** <https://dsh-plugin.org/plugins/pvlb-dev/dsh-resend-mcp>
 
 The plugin connects to Resend's hosted MCP server
 (`https://mcp.resend.com/mcp`), resolves your API key from the DSH credential
@@ -15,13 +18,14 @@ connection, credential reference, and active filter without revealing the key.
 > Not affiliated with Resend. Resend and the Resend logo are trademarks of
 > their respective owners.
 
-**Status:** v0.1.2 (same code as 0.1.0; documentation only), verified on
-2026-10-22 against DSH `0.2.0-rc.2` and Resend's live MCP server: 9 tools
-registered from 137 available, and a test email was delivered from
-`dsh@pvlb.dev` to `pvlb.dev@gmail.com`. CI runs on Forgejo Actions;
+**Status:** v0.1.3 (documentation and metadata only; the code is unchanged since
+0.1.0). Verified on 2026-10-22 against DSH `0.2.0-rc.2` and Resend's live MCP
+server: 9 tools registered from 137 available, and a test email was delivered
+from `dsh@pvlb.dev` to `pvlb.dev@gmail.com`. CI runs on Forgejo Actions;
 `dsh-resend-mcp` is published on
 [npmjs](https://www.npmjs.com/package/dsh-resend-mcp) and in the Forgejo
-registry.
+registry, and is listed on
+[dsh-plugin.org](https://dsh-plugin.org/plugins/pvlb-dev/dsh-resend-mcp).
 
 ## What it looks like
 
@@ -100,7 +104,7 @@ registry install gets its dependencies normally.
 git clone https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git
 cd dsh-resend-mcp
 npm pack
-dsh plugin --profile web add ./dsh-resend-mcp-0.1.2.tgz
+dsh plugin --profile web add ./dsh-resend-mcp-0.1.3.tgz
 ```
 
 ### From the Forgejo registry

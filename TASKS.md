@@ -33,7 +33,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | F5 | Send the Resend outreach email and propose a DeepSeek Harness docs tab | done (sent 2026-10-24 via the plugin to `zeno.rocha@resend.com`) | [#6](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/6) |
 | F6 | Create a public source mirror (GitHub/Codeberg) so package metadata links resolve | done | [#7](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/7) |
 | F7 | Adopt the pvlb.dev bootcamp: orientation block, `type/*`/`area/*`/`priority/*` labels, and the Gitea tool-bug registry in `AGENTS.md` | done | — |
-| F8 | Get the plugin listed on dsh-plugin.org: GitHub topic, README proof block, submission text | in progress (topic set and README done; hub issue pending) | [#8](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/8) |
+| F8 | Get the plugin listed on dsh-plugin.org: GitHub topic, README proof block, submission text | listed and verified 2026-10-25; waiting on the hub's npm sync so the install command becomes one-click | [#8](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/8) |
 | F9 | Give the agent an inbound address via a Resend Inbox in forwarding mode (no MX change) | open (operator: dashboard inbox + Namecheap rule) | [#9](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/9) |
 
 ## Remaining
@@ -41,8 +41,10 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 - #5: restart the Host once so the profile loads the npmjs-installed 0.1.2,
   then confirm `resend_status` and the tools.
 - #3 and #4: settings surface and inbox workflow docs.
-- #8: the operator posts the submission issue on the GitHub hub; then verify
-  the catalog entry, add the README badge, and publish the docs-only `0.1.3`.
+- #8: listed 2026-10-25 — badge added and `0.1.3` published. Still open: the hub
+  resolves the install command to `github:` (source fallback) instead of npm;
+  recheck `api.dsh-plugin.org/cmd/pvlb-dev/dsh-resend-mcp.json` after its next
+  sync, then close.
 - #9: inbound mail — create the Resend inbox in forwarding mode and add the
   Namecheap rule, then switch the plugin to `preset: inbox` and verify a thread.
 - Standing: label every new issue at creation (create, then
@@ -63,6 +65,8 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | F6 | Public source: Forgejo repo made public, `master` mirrored to GitHub | 2026-10-23 |
 | — | Published `0.1.2` (public metadata + credential docs) to both registries | 2026-10-23 |
 | F5 | Outreach sent to `zeno.rocha@resend.com` from `dsh@pvlb.dev` through the plugin itself; Resend ID `01a16f4f-4b65-7136-bab9-9ab524173982`, status **delivered** | 2026-10-24 |
+| F8 | Listing live and verified on dsh-plugin.org (Integrations & Connections); submission issue dshplugin/dsh-plugin-hub#429 closed by the maintainer | 2026-10-25 |
+| — | Published `0.1.3` (README badge + listing link) to npmjs and Forgejo; release `v0.1.3` | 2026-10-26 |
 
 ## Verification notes (2026-10-22 / CI 2026-10-23)
 
