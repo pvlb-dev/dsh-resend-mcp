@@ -282,10 +282,13 @@ Checked 2026-10-22, updated 2026-10-24:
   adding new agents or integrations to the agents page or the MCP Server docs
   right now". Not a permanent no, but do not re-pitch; the thread stays warm for
   substantive reasons only. Do not resurrect the docs-tab ask without a trigger.
-- Inbound mail (researched 2026-10-24, not implemented): Resend Inboxes suit an
-  agent mailbox and are exposed over MCP; `forwarding: true` avoids any MX
-  change on `pvlb.dev`. Options, quotas, and the rollout are in
-  `docs/inbound-mail.md`; the setup itself is an operator task (#9).
+- Inbound mail (2026-10-27): **live.** Inbox `deeps@pvlb.dev` exists in
+  forwarding mode (`receiving_address` `174d741d@jcanba.resend.app`), and the
+  `web` profile runs `config: { preset: inbox }`. The profile-patch change was
+  picked up **without a Host restart** — `resend_status` moved from `sending`
+  9/137 to `inbox` 14/137 live. Reading works through the plugin
+  (`list-inboxes`, `list-inbox-threads`). Options and reasoning:
+  `docs/inbound-mail.md`; the preset gap is #10, the dispatcher idea #11.
 - `origin` is `ssh://git@git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git`, default
   branch `master`. The repository is public; the web UI is
   <https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp> and `master` is pushed/mirrored

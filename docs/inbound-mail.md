@@ -86,15 +86,34 @@ do not have to touch MX at all.
 2. Namecheap → **Mail Settings → Email Forwarding**: add a mailbox rule
    `deeps` → that `receiving_address`. Leave the catch-all pointing at
    `pvlb.dev@gmail.com`; specific rules take precedence.
-3. Switch the plugin to the inbox preset (one line in the profile composition,
-   operator-owned): `config: { preset: inbox }`.
-4. Verify: `list-inboxes` shows the inbox, send a message to `deeps@pvlb.dev`
-   from Gmail, then `list-inbox-threads` → `get-inbox-thread-email`. Reply with
+3. Switch the plugin to the inbox preset — **done 2026-10-27.** The profile row is
+   `config: { preset: inbox }` in `~/.dsh/profiles/web/cordis.patch.yml`, and the
+   running Host picked it up **without a restart**: `resend_status` went from
+   `Preset: sending, 9/137` to `Preset: inbox, 14/137` live, and the new tools
+   appeared in the session.
+4. Verify: send a message to `deeps@pvlb.dev` from Gmail, then `list-inboxes` →
+   `list-inbox-threads` → `get-inbox-thread-email`. Reply with
    `reply-to-inbox-thread-email` and confirm it lands in the same thread.
 
 Step 3 is the only part that touches DSH configuration. Until the settings
 surface from [#3](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/3)
 exists, it is a YAML edit in the profile, not a UI toggle.
+
+## State on 2026-10-27
+
+- Inbox `deeps@pvlb.dev` created 2026-10-26 23:26Z in forwarding mode; its
+  `receiving_address` is `174d741d@jcanba.resend.app`, and mail reaches it (a
+  Gmail forwarding request was waiting for confirmation in the inbox).
+- Reading works through the plugin: `list-inboxes` reports the inbox with its
+  unread count, `list-inbox-threads` lists the two threads with subjects,
+  senders, folders and read state.
+- The `inbox` preset exposes 14 tools but misses several a real mailbox needs —
+  `search-inbox-threads`, `forward-inbox-thread-email`, `update-inbox-thread`,
+  the draft lifecycle, and labels. That gap is
+  [#10](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/10); the
+  dispatcher idea in
+  [#11](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/11) may make the
+  preset question moot.
 
 ## Security note
 

@@ -34,7 +34,9 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | F6 | Create a public source mirror (GitHub/Codeberg) so package metadata links resolve | done | [#7](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/7) |
 | F7 | Adopt the pvlb.dev bootcamp: orientation block, `type/*`/`area/*`/`priority/*` labels, and the Gitea tool-bug registry in `AGENTS.md` | done | — |
 | F8 | Get the plugin listed on dsh-plugin.org: GitHub topic, README proof block, submission text | listed and verified 2026-10-25; waiting on the hub's npm sync so the install command becomes one-click | [#8](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/8) |
-| F9 | Give the agent an inbound address via a Resend Inbox in forwarding mode (no MX change) | open (operator: dashboard inbox + Namecheap rule) | [#9](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/9) |
+| F9 | Give the agent an inbound address via a Resend Inbox in forwarding mode (no MX change) | done (inbox `deeps@pvlb.dev` live; `preset: inbox` applied 2026-10-27, picked up without a restart) | [#9](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/9) |
+| F10 | Extend the inbox preset into a real mailbox preset (search, forward, thread state, drafts, labels) | open | [#10](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/10) |
+| F11 | Evaluate dispatcher mode: one `resend` tool instead of 137 | open (numbers measured; `get_more_tools` to investigate) | [#11](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/11) |
 
 ## Remaining
 
@@ -45,8 +47,8 @@ Status legend: `open` · `in progress` · `done` · `blocked`
   resolves the install command to `github:` (source fallback) instead of npm;
   recheck `api.dsh-plugin.org/cmd/pvlb-dev/dsh-resend-mcp.json` after its next
   sync, then close.
-- #9: inbound mail — create the Resend inbox in forwarding mode and add the
-  Namecheap rule, then switch the plugin to `preset: inbox` and verify a thread.
+- #9: done — mail to `deeps@pvlb.dev` is readable through the plugin's inbox
+  tools. Next: #10 (mailbox preset gaps) and #11 (dispatcher evaluation).
 - Standing: label every new issue at creation (create, then
   `gitea_labels {action: "set"}` with numeric ids until dsh-gitea#6 lands) and
   file a focused `dsh-gitea` issue for each new tool defect, adding its row to
