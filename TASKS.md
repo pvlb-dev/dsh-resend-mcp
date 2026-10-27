@@ -33,7 +33,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | F5 | Send the Resend outreach email and propose a DeepSeek Harness docs tab | done (sent 2026-10-24 via the plugin to `zeno.rocha@resend.com`) | [#6](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/6) |
 | F6 | Create a public source mirror (GitHub/Codeberg) so package metadata links resolve | done | [#7](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/7) |
 | F7 | Adopt the pvlb.dev bootcamp: orientation block, `type/*`/`area/*`/`priority/*` labels, and the Gitea tool-bug registry in `AGENTS.md` | done | — |
-| F8 | Get the plugin listed on dsh-plugin.org: GitHub topic, README proof block, submission text | listed and verified 2026-10-25; waiting on the hub's npm sync so the install command becomes one-click | [#8](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/8) |
+| F8 | Get the plugin listed on dsh-plugin.org: GitHub topic, README proof block, submission text | listed and verified 2026-10-25; one-click install blocked by the hub's resolver, fixed in `0.1.4` (`repository` now points at the GitHub mirror) | [#8](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/8) |
 | F9 | Give the agent an inbound address via a Resend Inbox in forwarding mode (no MX change) | done (inbox `deeps@pvlb.dev` live; `preset: inbox` applied 2026-10-27, picked up without a restart) | [#9](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/9) |
 | F10 | Extend the inbox preset into a real mailbox preset (search, forward, thread state, drafts, labels) | open | [#10](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/10) |
 | F11 | Evaluate dispatcher mode: one `resend` tool instead of 137 | open (numbers measured; `get_more_tools` to investigate) | [#11](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/11) |
@@ -69,6 +69,7 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | F5 | Outreach sent to `zeno.rocha@resend.com` from `dsh@pvlb.dev` through the plugin itself; Resend ID `01a16f4f-4b65-7136-bab9-9ab524173982`, status **delivered** | 2026-10-24 |
 | F8 | Listing live and verified on dsh-plugin.org (Integrations & Connections); submission issue dshplugin/dsh-plugin-hub#429 closed by the maintainer | 2026-10-25 |
 | — | Published `0.1.3` (README badge + listing link) to npmjs and Forgejo; release `v0.1.3` | 2026-10-26 |
+| — | Published `0.1.4` (npm `repository` → GitHub mirror, so the hub's resolver matches) to both registries; release `v0.1.4` | 2026-10-27 |
 
 ## Verification notes (2026-10-22 / CI 2026-10-23)
 

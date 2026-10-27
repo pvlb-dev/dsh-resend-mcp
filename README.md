@@ -18,7 +18,7 @@ connection, credential reference, and active filter without revealing the key.
 > Not affiliated with Resend. Resend and the Resend logo are trademarks of
 > their respective owners.
 
-**Status:** v0.1.3 (documentation and metadata only; the code is unchanged since
+**Status:** v0.1.4 (documentation and metadata only; the code is unchanged since
 0.1.0). Verified on 2026-10-22 against DSH `0.2.0-rc.2` and Resend's live MCP
 server: 9 tools registered from 137 available, and a test email was delivered
 from `dsh@pvlb.dev` to `pvlb.dev@gmail.com`. CI runs on Forgejo Actions;
@@ -104,7 +104,7 @@ registry install gets its dependencies normally.
 git clone https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git
 cd dsh-resend-mcp
 npm pack
-dsh plugin --profile web add ./dsh-resend-mcp-0.1.3.tgz
+dsh plugin --profile web add ./dsh-resend-mcp-0.1.4.tgz
 ```
 
 ### From the Forgejo registry

@@ -38,21 +38,29 @@ which shows real `resend_status` output and the verified send path.
   indexed in the DSH Plugin Hub catalog", and because the package is on npm the
   in-app Plugin Hub "will also pick up the one-click install entry after the
   next sync".
-- **Open item:** the resolved install command is still the source fallback —
-  `GET /cmd/pvlb-dev/dsh-resend-mcp.json` returned
-  `{"command":"dsh plugin --profile web add github:pvlb-dev/dsh-resend-mcp","manualInstall":true}`
-  on 2026-10-26, and the entry is absent from `plugins.en.json`.
-- The JSON catalogs carry only one-click (npm) entries: 5,245 entries on
-  2026-10-26 against 17,316 repositories in the site's live index. Absence from
-  the JSON therefore means "npm install path not resolved yet", not "not
-  listed".
-- **Do not "fix" `package.json` for this.** The obvious theory — that the hub
-  needs the npm `repository` field to point at GitHub — is wrong: two catalog
-  entries claim `dsh-edit-resend`, whose npm package has *no* `repository` at
-  all, and both received the npm command. The hub matches on the package name;
-  our Forgejo `repository`/`homepage` fields are irrelevant to it.
-- If a sync or two does not switch the command, comment on hub#429 with that
-  `cmd` payload as evidence. Do not open a second submission issue.
+- **Resolved 2026-10-27.** The fallback was not a sync lag. The hub's in-app
+  resolver requires the **npm package's `repository` URL to point at the GitHub
+  repo** (plus a `dsh-plugin` keyword or a `dsh` manifest). Source:
+  [`src/server/services/install/npm-resolve.ts`](https://github.com/dshplugin/dsh-plugin-hub/blob/main/src/server/services/install/npm-resolve.ts)
+  — `isDshPackageMetadataForRepo()` rejects the package when
+  `githubRepoOf(repositoryUrl) !== repo`, and its file comment states the rule
+  plainly ("包元数据里的 repository 指向该仓库"). Our `repository` pointed at
+  `git.pvlb.dev`, so the check failed even though the name matched.
+- **Fix:** `package.json` `repository` now points at
+  `git+https://github.com/pvlb-dev/dsh-resend-mcp.git` (the mirror), shipped as
+  `0.1.4`. `homepage` and `bugs` still point at the Forgejo home, and the README
+  still calls Forgejo the home — only the field the resolver reads moved.
+- The JSON catalogs carry only one-click (npm) entries: 5,365 entries on
+  2026-10-27 against 17,316 repositories in the site's live index. Absence from
+  the JSON therefore means "npm install path not resolved", not "not listed".
+- **Correction to an earlier claim in this file:** a previous version said the
+  hub matched on package name alone, backed by two catalog entries claiming
+  `dsh-edit-resend` whose npm package has no `repository` field. That inference
+  was wrong — the source above is authoritative, and the catalog is built by a
+  different pipeline than the runtime check. Do not remove the GitHub
+  `repository` field again.
+- If the sync after `0.1.4` still leaves the fallback, comment on hub#429 with
+  the `cmd` payload. Do not open a second submission issue.
 
 ## Two repositories, one listing target
 
