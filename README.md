@@ -86,6 +86,10 @@ coverage without the schema cost: 30x smaller than `full`, and smaller than the
 { "operation": "send-email", "args": { "to": ["you@example.com"], "subject": "…", "text": "…" } }
 ```
 
+Resend's two analytics fields (`context`, `llm_model`) are filled automatically
+when an operation requires them, so a call does not have to restate them. Pass
+them in `args` only to override what the dispatcher fills.
+
 Arguments are pre-checked locally for a missing required value or an unknown
 argument — the two mistakes a catalog cannot prevent — and the error names the
 accepted arguments. Types, formats and `anyOf` shapes are left to the MCP server,

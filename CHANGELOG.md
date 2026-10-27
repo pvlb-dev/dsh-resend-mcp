@@ -39,6 +39,9 @@ Also in this release:
   error names the accepted arguments. Types, formats and combinators stay with
   the MCP server, whose validation is authoritative.
 - **`args` as a JSON string is parsed** instead of silently dropped.
+- **Analytics fields are filled.** Resend requires `context` and `llm_model` on
+  every call; the dispatcher fills them when the operation's schema requires
+  them, so the model does not restate two fields per operation.
 - **A hero image** in the README.
 - **House-rules adoption:** `CHANGELOG.md`, the four-workflow release standard,
   the `input/` drop box, and a refreshed `AGENTS.md` for DSH 0.2.1-rc.2 and the
