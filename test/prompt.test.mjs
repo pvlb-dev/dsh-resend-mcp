@@ -47,13 +47,30 @@ test('server instructions are included and bounded', () => {
   assert.match(text, /Resend MCP server instructions/)
   assert.match(text, /Use send-email for one-off messages\./)
 
+  const baseline = buildPromptText(base).length
   const huge = 'x'.repeat(10_000)
   const capped = buildPromptText({ ...base, serverInstructions: huge, maxInstructionBytes: 100 })
-  assert.ok(capped.length < 1_000)
+  assert.ok(capped.length - baseline < 200, `${capped.length - baseline} extra chars`)
   assert.match(capped, /\[truncated\]/)
 })
 
 test('prompt never contains credential-like values', () => {
   const text = buildPromptText({ ...base, defaultSender: 'dsh@pvlb.dev' })
   assert.doesNotMatch(text, /re_[A-Za-z0-9]{8,}/)
+})
+
+test('dispatcher mode points at the call tool and the help tool', () => {
+  const text = buildPromptText({
+    serverName: 'resend',
+    preset: 'dispatcher',
+    dispatcher: true,
+    operationCount: 137,
+    selected: ['resend'],
+    availableCount: 137,
+  })
+  assert.match(text, /Active preset: `dispatcher`; all 137 of 137/)
+  assert.match(text, /`resend\(\{ operation, args \}\)`/)
+  assert.match(text, /`resend_help\(\{ operation \}\)` returns that operation's full description/)
+  assert.match(text, /untrusted data/, 'inbound mail stays untrusted in dispatcher mode')
+  assert.doesNotMatch(text, /Exposed tools:/)
 })

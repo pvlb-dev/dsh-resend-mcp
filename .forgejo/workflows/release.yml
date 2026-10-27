@@ -1,0 +1,104 @@
+name: Release notes
+
+# Creates the Forgejo release for a v* tag: the title and the notes come from
+# CHANGELOG.md (scripts/release-notes.mjs), and the npm tarball of the same
+# commit is attached as an asset. Runs next to publish.yml/publish-npmjs.yml and
+# fails independently, so a release-page problem never blocks a publish.
+#
+# Part of the four-workflow release standard (ci, publish, publish-npmjs,
+# release): one v* tag produces every artifact. See docs/publishing.md.
+#
+# Auth: the automatic Actions token (GITHUB_TOKEN) has repository write access
+# for same-repository tag pushes, so no setup is required. A repository secret
+# RELEASE_TOKEN overrides it when a dedicated token is preferred.
+#
+# Idempotent: an existing release for the tag is never rewritten, so notes
+# edited by hand in the UI win over the generated ones.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: docker
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.6"
+
+      - name: Verify release tag matches package version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$version" ]; then
+            echo "::error::Tag $tag does not match package version $version. Bump package.json or retag."
+            exit 1
+          fi
+
+      - name: Check the release token
+        env:
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          API: ${{ github.server_url }}/api/v1/repos/${{ github.repository }}
+        run: |
+          token="${RELEASE_TOKEN:-${GITHUB_TOKEN:-${FORGEJO_TOKEN:-}}}"
+          if [ -z "$token" ]; then
+            echo "::warning::No release token available. Add a Forgejo token with the write:repository scope as the RELEASE_TOKEN secret; CI cannot create release pages without one."
+            exit 0
+          fi
+          if [ -n "$RELEASE_TOKEN" ]; then
+            echo "Using the RELEASE_TOKEN secret."
+          else
+            echo "Using the automatic Actions token."
+          fi
+          version="$(node -p "require('./package.json').version")"
+          curl -sS -o /dev/null -w "Release lookup for v$version: HTTP %{http_code}\n" \
+            -H "Authorization: token $token" "$API/releases/tags/v$version"
+
+      - name: Preview the notes (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: node scripts/release-notes.mjs "$(node -p "require('./package.json').version")" --body
+
+      - name: Create the Forgejo release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          API: ${{ github.server_url }}/api/v1/repos/${{ github.repository }}
+        run: |
+          set -eu
+          token="${RELEASE_TOKEN:-${GITHUB_TOKEN:-${FORGEJO_TOKEN:-}}}"
+          if [ -z "$token" ]; then
+            echo "::warning::No release token available; skipping the release page."
+            exit 0
+          fi
+
+          version="$(node -p "require('./package.json').version")"
+          tag="v$version"
+          auth="Authorization: token $token"
+
+          status="$(curl -sS -o /dev/null -w '%{http_code}' -H "$auth" "$API/releases/tags/$tag")"
+          if [ "$status" = "200" ]; then
+            echo "Release $tag already exists; leaving its notes untouched."
+            exit 0
+          fi
+          if [ "$status" != "404" ]; then
+            echo "::error::Unexpected HTTP $status while looking for an existing release of $tag."
+            exit 1
+          fi
+
+          node scripts/release-notes.mjs "$version" > release.json
+          id="$(curl -fsS -X POST -H "$auth" -H "Content-Type: application/json" \
+                 --data-binary @release.json "$API/releases" \
+               | node -p "JSON.parse(require('node:fs').readFileSync(0, 'utf8')).id")"
+          echo "Created the release for $tag (id $id)."
+
+          tarball="$(npm pack --silent)"
+          curl -fsS -o /dev/null -X POST -H "$auth" \
+            -F "attachment=@$tarball" "$API/releases/$id/assets?name=$tarball"
+          echo "Attached $tarball to the $tag release."

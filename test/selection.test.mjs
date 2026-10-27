@@ -28,11 +28,12 @@ const ALL = [
 ]
 
 test('presets are declared and stable', () => {
-  assert.deepEqual(PRESET_NAMES, ['minimal', 'sending', 'inbox', 'full', 'custom'])
+  assert.deepEqual(PRESET_NAMES, ['minimal', 'sending', 'inbox', 'full', 'dispatcher', 'custom'])
   assert.equal(PRESETS.minimal.length, 4)
   assert.equal(PRESETS.sending.length, 9)
   assert.equal(PRESETS.inbox.length, 14)
   assert.deepEqual(PRESETS.full, ['*'])
+  assert.deepEqual(PRESETS.dispatcher, ['*'])
 })
 
 test('minimal selects only the four core tools', () => {

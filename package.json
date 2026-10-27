@@ -1,6 +1,6 @@
 {
   "name": "dsh-resend-mcp",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Resend MCP toolset for DeepSeek Harness: credential-aware, filtered access to Resend's hosted MCP server.",
   "type": "module",
   "main": "lib/index.js",
@@ -17,6 +17,7 @@
     "cordis.patch.yml",
     "icon.svg",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "icon": "./icon.svg",
@@ -43,7 +44,8 @@
     "check": "node --check lib/index.js && node --check lib/selection.js && node --check lib/prompt.js && node --check lib/bridge.js && node --test test/*.test.mjs",
     "dev:link": "node scripts/dev-link-dsh.mjs",
     "smoke": "node scripts/smoke.mjs",
-    "pack:check": "npm pack --dry-run"
+    "pack:check": "npm pack --dry-run",
+    "catalog:size": "node scripts/catalog-size.mjs"
   },
   "dsh": {
     "bundle": {

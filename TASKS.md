@@ -36,7 +36,9 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | F8 | Get the plugin listed on dsh-plugin.org: GitHub topic, README proof block, submission text | listed and verified 2026-10-25; one-click install blocked by the hub's resolver, fixed in `0.1.4` (`repository` now points at the GitHub mirror) | [#8](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/8) |
 | F9 | Give the agent an inbound address via a Resend Inbox in forwarding mode (no MX change) | done (inbox `deeps@pvlb.dev` live; `preset: inbox` applied 2026-10-27, picked up without a restart) | [#9](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/9) |
 | F10 | Extend the inbox preset into a real mailbox preset (search, forward, thread state, drafts, labels) | open | [#10](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/10) |
-| F11 | Evaluate dispatcher mode: one `resend` tool instead of 137 | open (numbers measured; `get_more_tools` to investigate) | [#11](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/11) |
+| F11 | Evaluate dispatcher mode: one `resend` tool instead of 137 | done in `0.1.5` (branch `feat/0.1.5-dispatcher`): `preset: dispatcher`, 12.5 KB vs 380 KB | [#11](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/11) |
+| F12 | Split `AGENTS.md` into a ~7 KB map plus `docs/` topic files (bootcamp map rule) | open | [#12](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/12) |
+| F13 | Adopt staged npm publishing (`npm stage publish` + 2FA approval) | open (operator decides the token kind) | [#13](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/13) |
 
 ## Remaining
 
@@ -47,12 +49,14 @@ Status legend: `open` · `in progress` · `done` · `blocked`
   resolves the install command to `github:` (source fallback) instead of npm;
   recheck `api.dsh-plugin.org/cmd/pvlb-dev/dsh-resend-mcp.json` after its next
   sync, then close.
-- #9: done — mail to `deeps@pvlb.dev` is readable through the plugin's inbox
-  tools. Next: #10 (mailbox preset gaps) and #11 (dispatcher evaluation).
-- Standing: label every new issue at creation (create, then
-  `gitea_labels {action: "set"}` with numeric ids until dsh-gitea#6 lands) and
-  file a focused `dsh-gitea` issue for each new tool defect, adding its row to
-  the table in `AGENTS.md`.
+- #10: extend `inbox` into a mailbox preset — partly superseded by the
+  dispatcher, which already exposes search/forward/draft/label operations.
+- #11: done — `0.1.5` on the branch. After merge: tag `v0.1.5`, then verify the
+  npmjs stage and the generated release page.
+- #12/#13: house-rule follow-ups (AGENTS map split, staged npm publishing).
+- Standing: label every issue **at creation** (`gitea_issue_create` accepts
+  names) and file a focused `dsh-gitea` issue for each new tool defect, adding
+  its row to the table in `AGENTS.md`.
 
 ## Done
 
@@ -70,6 +74,8 @@ Status legend: `open` · `in progress` · `done` · `blocked`
 | F8 | Listing live and verified on dsh-plugin.org (Integrations & Connections); submission issue dshplugin/dsh-plugin-hub#429 closed by the maintainer | 2026-10-25 |
 | — | Published `0.1.3` (README badge + listing link) to npmjs and Forgejo; release `v0.1.3` | 2026-10-26 |
 | — | Published `0.1.4` (npm `repository` → GitHub mirror, so the hub's resolver matches) to both registries; release `v0.1.4` | 2026-10-27 |
+| F11 | Dispatcher mode: `preset: dispatcher` (2 tools, 12.5 KB) with local argument pre-checks and schema-on-demand help; branch `feat/0.1.5-dispatcher`, version `0.1.5` | 2026-10-27 |
+| — | House-rule adoption from the 2026-10-26 bootcamp: input box, labels, four-workflow release standard (`release.yml` + `CHANGELOG.md`), DSH 0.2.1 facts | 2026-10-27 |
 
 ## Verification notes (2026-10-22 / CI 2026-10-23)
 

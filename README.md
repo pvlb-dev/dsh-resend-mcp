@@ -2,6 +2,8 @@
 
 [![Listed on dsh-plugin.org](https://dsh-plugin.org/badges/listed.svg)](https://dsh-plugin.org/plugins/pvlb-dev/dsh-resend-mcp)
 
+![A humpback whale breaching beside the Resend wordmark at sunset, a heart between them](docs/assets/readme-hero.jpg)
+
 Resend email tools for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness),
 wrapped as an installable DSH bundle.
 
@@ -18,11 +20,12 @@ connection, credential reference, and active filter without revealing the key.
 > Not affiliated with Resend. Resend and the Resend logo are trademarks of
 > their respective owners.
 
-**Status:** v0.1.4 (documentation and metadata only; the code is unchanged since
-0.1.0). Verified on 2026-10-22 against DSH `0.2.0-rc.2` and Resend's live MCP
-server: 9 tools registered from 137 available, and a test email was delivered
-from `dsh@pvlb.dev` to `pvlb.dev@gmail.com`. CI runs on Forgejo Actions;
-`dsh-resend-mcp` is published on
+**Status:** v0.1.5 adds **dispatcher mode**: 137 operations behind two tools for
+12.5 KB of schema instead of 380 KB. The send and inbox paths are verified
+against Resend's live MCP server (DSH `0.2.0-rc.2` originally, `0.2.1-rc.2`
+today): a test email from `dsh@pvlb.dev` to `pvlb.dev@gmail.com` was
+**delivered**, and inbound mail at `deeps@pvlb.dev` is read through the plugin's
+own inbox tools. CI runs on Forgejo Actions; `dsh-resend-mcp` is published on
 [npmjs](https://www.npmjs.com/package/dsh-resend-mcp) and in the Forgejo
 registry, and is listed on
 [dsh-plugin.org](https://dsh-plugin.org/plugins/pvlb-dev/dsh-resend-mcp).
@@ -49,20 +52,49 @@ reported `delivered`, and `mcp__resend__get-email` returned it by its Resend
 ID. `mcp__resend__list-domains` confirms the sending domain is verified with
 sending enabled.
 
-## Why a subset?
+## How much schema goes on every request?
 
-Resend's MCP server currently exposes **137 tools** whose JSON schemas total
-roughly **405 KB** — on every model request. Most sessions need a handful of
-them. This plugin selects a small, useful preset by default and lets you widen
-it explicitly:
+Resend's MCP server exposes **137 tools** whose JSON schemas total **380.6 KB**
+— on every model request. Three strategies, measured on 2026-10-27:
 
-| Preset | Tools | Approx. schema size |
+| Preset | Tools | Schema per request |
 |---|---|---|
-| `minimal` | `send-email`, `list-emails`, `get-email`, `list-domains` | ~13 KB |
-| `sending` *(default)* | minimal + `list-contacts`, `get-contact`, `create-contact`, `list-templates`, `list-broadcasts` | ~26 KB |
-| `inbox` | minimal + ten inbox read/thread/draft tools | ~54 KB |
-| `full` | every tool the server exposes | ~405 KB today |
+| `minimal` | 4 | 12.8 KB |
+| `sending` *(default)* | 9 | 24.2 KB |
+| `inbox` | 14 | 51.3 KB |
+| `dispatcher` | **2** | **12.5 KB** |
+| `full` | 137 | 380.6 KB |
 | `custom` | whatever `tools` matches | user-controlled |
+
+The curated presets trade coverage for a small prompt. Dispatcher mode trades a
+little latency — one help lookup when an argument shape is unclear — for
+coverage without the schema cost: 30x smaller than `full`, and smaller than the
+`inbox` preset while every operation stays reachable.
+
+## Dispatcher mode
+
+`preset: dispatcher` registers two tools instead of one per operation:
+
+- `resend({ operation, args })` — call any operation. Its description carries a
+  one-line-per-operation catalog, so the model can see what exists without
+  loading 137 schemas.
+- `resend_help({ operation })` — one operation's description and full JSON
+  schema, fetched only when needed. `resend_help({})` lists every operation.
+
+```jsonc
+// send-email through the dispatcher
+{ "operation": "send-email", "args": { "to": ["you@example.com"], "subject": "…", "text": "…" } }
+```
+
+Arguments are pre-checked locally for a missing required value or an unknown
+argument — the two mistakes a catalog cannot prevent — and the error names the
+accepted arguments. Types, formats and `anyOf` shapes are left to the MCP server,
+whose validation is authoritative. A schema too large for the help budget is
+degraded in stages (pretty → compact → name/type list), never clipped mid-JSON.
+
+Choose `dispatcher` when the session needs breadth, `sending`/`inbox` when it
+needs a handful of tools with the smallest possible prefix, and `full` when you
+want one model-facing tool per operation and do not care about the schema bill.
 
 ## Requirements
 
@@ -104,7 +136,7 @@ registry install gets its dependencies normally.
 git clone https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp.git
 cd dsh-resend-mcp
 npm pack
-dsh plugin --profile web add ./dsh-resend-mcp-0.1.4.tgz
+dsh plugin --profile web add ./dsh-resend-mcp-0.1.5.tgz
 ```
 
 ### From the Forgejo registry
@@ -172,7 +204,7 @@ configuration layer when you need different behavior:
 | `serverName` | `resend` | Namespace for `mcp__<serverName>__<tool>` |
 | `url` | `https://mcp.resend.com/mcp` | Streamable HTTP MCP endpoint |
 | `apiKeyEnv` | `RESEND_API_KEY` | Credential reference (never the value) |
-| `preset` | `sending` | `minimal`, `sending`, `inbox`, `full`, or `custom` |
+| `preset` | `sending` | `minimal`, `sending`, `inbox`, `dispatcher`, `full`, or `custom` |
 | `tools` | `[]` | Allowlist patterns; a non-empty list replaces the preset. `*` is a wildcard |
 | `excludeTools` | `[]` | Patterns removed after the preset/allowlist |
 | `defaultSender` | `""` | Verified sender address included in prompt guidance |
@@ -180,6 +212,7 @@ configuration layer when you need different behavior:
 | `startupTimeoutMs` | `30000` | Initial connect and tool-list timeout |
 | `failOnStartupError` | `true` | Fail activation instead of keeping `resend_status` with retries |
 | `maxInstructionBytes` | `8192` | Bound on optional server instruction text |
+| `maxCatalogBytes` | `24576` | Budget for the operation catalog in dispatcher mode |
 
 Examples:
 
@@ -195,6 +228,10 @@ config:
 # Add inbox reading on top of the default sending preset
 config:
   preset: inbox
+
+# Every operation behind two tools (12.5 KB instead of 380 KB)
+config:
+  preset: dispatcher
 ```
 
 To use an explicit list, set `tools`; it replaces the preset:
@@ -210,8 +247,8 @@ config:
 
 ## Tools
 
-All MCP-backed tools use the `mcp__resend__` prefix and map 1:1 to Resend's
-server tools. The default `sending` preset exposes:
+In the curated presets every MCP-backed tool uses the `mcp__resend__` prefix and
+maps 1:1 to Resend's server tools. The `sending` preset (the default) exposes:
 
 - `mcp__resend__send-email`
 - `mcp__resend__list-emails`
@@ -227,6 +264,13 @@ Plus the native diagnostic:
 
 - `resend_status` — connection state, credential reference/source, preset,
   registered tools, missing filter patterns, last error. It never prints the key.
+
+In `dispatcher` mode the tool surface is instead:
+
+- `resend` — `{ operation, args }`, with the operation catalog in its description
+- `resend_help` — one operation's description and schema, or the full catalog
+- `resend_status` — the same diagnostic, reporting `mode: dispatcher` and the
+  operation count
 
 Resend's `send-email` requires `to`, `subject`, `text`, `from`, `context`, and
 `llm_model`. The plugin's prompt guidance explains this and uses
@@ -253,6 +297,7 @@ npm test             # unit tests, no network/DSH required
 npm run check        # syntax checks + tests
 npm run dev:link     # before a local-path install
 npm run smoke        # real server check; needs RESEND_API_KEY in env
+npm run catalog:size # measure the wire cost of each preset against the live server
 npm run pack:check   # inspect the publish artifact
 ```
 
@@ -273,6 +318,10 @@ verification checklist, [TASKS.md](TASKS.md) for the backlog, and
 - DSH validates only its own JSON Schema subset locally. Resend keywords such as
   `format`, `pattern`, `minItems`, and `maxItems` reach the model but are
   enforced by Resend's server.
+- Dispatcher mode costs one extra call (`resend_help`) when an argument shape is
+  unclear, and its catalog is a one-line summary per operation — the full text
+  and schema arrive only through `resend_help`. Choose `full` if you would
+  rather pay 380 KB up front and have one tool per operation.
 - Reconnection uses bounded exponential backoff; after the attempt budget the
   tools are unregistered until the plugin reloads or the Host restarts.
 - No settings UI yet; configure through YAML.

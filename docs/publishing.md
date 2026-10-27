@@ -86,7 +86,7 @@ token is needed to read it):
 
 ```bash
 npm pack dsh-resend-mcp@0.1.4 --registry https://git.pvlb.dev/api/packages/dsh-plugins/npm/
-dsh plugin --profile web add ./dsh-resend-mcp-0.1.4.tgz
+dsh plugin --profile web add ./dsh-resend-mcp-0.1.5.tgz
 ```
 
 ## Option B — npmjs (public install)
@@ -155,6 +155,37 @@ up yet; the artifact is identical.
 - **`npm publish` says the version already exists**: Forgejo rejects duplicate
   name+version pairs. Bump `package.json`, or delete the version in the package
   UI before republishing.
+
+## Release pages and CHANGELOG
+
+A `v*` tag drives four workflows — `ci.yml`, `publish.yml`, `publish-npmjs.yml`
+and `release.yml`. The last one creates the Forgejo release page from
+`CHANGELOG.md` with `scripts/release-notes.mjs`:
+
+- the title is `v<version> — <first ### heading of the version section>`;
+- the body is that section plus an install line and the home/npm links;
+- the `npm pack` tarball of the same commit is attached;
+- an existing release is never rewritten, so hand-edited notes win;
+- a manual `workflow_dispatch` prints the notes without creating anything.
+
+So **the version bump and the changelog entry go in the same commit**:
+
+```bash
+# 1. edit CHANGELOG.md:  ## [0.1.6] - 2026-11-01  +  ### <what changed>
+# 2. bump package.json to 0.1.6 and commit both
+git commit -am "chore: release 0.1.6"
+git tag -a v0.1.6 -m "dsh-resend-mcp 0.1.6"
+git push origin master v0.1.6
+```
+
+Preview the notes locally with
+`node scripts/release-notes.mjs 0.1.6 --body`.
+
+**Pending divergence from the bootcamp:** the wiki's npmjs standard is
+`npm stage publish` with a 2FA approval; this repo still runs plain
+`npm publish` because the `NPMJS_TOKEN` in use is not stage-only. Switching
+needs the operator's decision — tracked as
+[#13](https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp/issues/13).
 
 ## Current status
 
