@@ -10,7 +10,7 @@ the project safe and reviewable.
 This repo lives on the pvlb.dev forge:
 <https://git.pvlb.dev/dsh-plugins/dsh-resend-mcp>. Before starting, read the
 bootcamp page:
-<https://git.pvlb.dev/pvlb-infra/vps-setup/wiki/DSH-Bootcamp> (repos and wikis
+<https://git.pvlb.dev/ops/srvbtw/wiki/DSH-Bootcamp> (repos and wikis
 are private — a browser `web_fetch` 404s; read it through an SSH clone). It
 covers the box, the global `dsh <dsh@pvlb.dev>` GPG-signed commit identity,
 `git` vs the `gitea_*` tools, and the house rules.
