@@ -12,8 +12,8 @@ This repo lives on the pvlb.dev forge:
 bootcamp page. It is the house rulebook; this file is the project's copy:
 
 ```bash
-git clone ssh://git@git.pvlb.dev/pvlb-infra/vps-setup.wiki.git /tmp/vps-setup.wiki
-less /tmp/vps-setup.wiki/DSH-Bootcamp.md
+git clone ssh://git@git.pvlb.dev:ops/srvbtw.wiki.git /tmp/srvbtw.wiki
+less /tmp/srvbtw.wiki/DSH-Bootcamp.md
 ```
 
 The wiki and the control repo are **private** (a browser `web_fetch` 404s on
