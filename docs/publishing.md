@@ -53,7 +53,7 @@ CI publishes a tag automatically through
 2. **Store it as a repository secret.** Open the repo's
    **Settings → Actions → Secrets**, add `NPM_TOKEN` with that token. This is
    exactly the flow in the
-   [runner wiki](https://git.pvlb.dev/ops/srvbtw/wiki/Forgejo-Actions-Runner#secrets-and-variables).
+   [runner wiki](https://git.pvlb.dev/ops/srv/wiki/Forgejo-Actions-Runner#secrets-and-variables).
 3. Nothing else. The workflow does the npm config dance in the job container.
 
 The token belongs to a user account, not to the repository, and it is the
